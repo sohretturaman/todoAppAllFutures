@@ -1,24 +1,41 @@
 import { StyleSheet, Text, View ,StatusBar} from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Note from "./screens/Note"
 import AddNote from './screens/AddNote'
-import DeleteNote from './screens/DeleteNote'
+import DeleteNote from './screens/DeletedNote'
 
 const Stack = createStackNavigator(); 
 const App = () => {
+  const [note,setNote] =useState('');
+  const [notes,setNotes] = useState([]); 
+  const handleAddButton = () => {
+
+    if (note.trim().length > 0) {
+         const newNote = note;
+         const newNotes =[newNote,...notes];
+         setNotes(newNotes); 
+         setNote('') 
+
+    } else {
+      console.log('note didnt add')
+    }
+   
+
+
+  }
   return (
      <NavigationContainer>
-      <Stack.Navigator>
-         <Stack.Screen name='Note'>
-           {props=><Note {...props}/>} 
+      <Stack.Navigator screenOptions={{headerShown:true}}>
+         <Stack.Screen name='Note' >
+           {props=><Note {...props} setNotes={setNotes} notes={notes}  note={note} setNote={setNote}/>} 
          </Stack.Screen>
          <Stack.Screen name='AddNote'>
-          {props=><AddNote {...props} />}
+          {props=><AddNote {...props} setNote={setNote} note={note} setNotes={setNotes} notes= {notes} handleAddButton={handleAddButton} />}
          </Stack.Screen>
-         <Stack.Screen name='DeleteNote'>
-          {props=><DeleteNote {...props}/>}
+         <Stack.Screen name='DeletedNote'>
+          {props=><DeleteNote {...props} />}
          </Stack.Screen>
       </Stack.Navigator>
      </NavigationContainer>

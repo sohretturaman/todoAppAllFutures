@@ -10,6 +10,9 @@ const Stack = createStackNavigator();
 const App = () => {
   const [note,setNote] =useState('');
   const [notes,setNotes] = useState([]); 
+  const [date,setDate] = useState(new Date().toUTCString());
+  const [moveToTrash,setMoveToTrash]=useState([]);
+
   const handleAddButton = () => {
 
     if (note.trim().length > 0) {
@@ -29,13 +32,13 @@ const App = () => {
      <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:true}}>
          <Stack.Screen name='Note' >
-           {props=><Note {...props} setNotes={setNotes} notes={notes}  note={note} setNote={setNote}/>} 
+           {props=><Note {...props} setNotes={setNotes} notes={notes}  note={note} setNote={setNote} date={date } setDate ={setDate}  moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash}/>} 
          </Stack.Screen>
          <Stack.Screen name='AddNote'>
           {props=><AddNote {...props} setNote={setNote} note={note} setNotes={setNotes} notes= {notes} handleAddButton={handleAddButton} />}
          </Stack.Screen>
          <Stack.Screen name='DeletedNote'>
-          {props=><DeleteNote {...props} />}
+          {props=><DeleteNote {...props} note={note} setNote={setNote} date={date} moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash} />}
          </Stack.Screen>
       </Stack.Navigator>
      </NavigationContainer>

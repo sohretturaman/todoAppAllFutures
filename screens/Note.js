@@ -4,12 +4,25 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NoteComp from '../components/NoteComp';
-
+import { styles } from './styles'
 
 const Note = ({ navigation, ...props }) => {
-  console.log(props.note, 'in note screen')
+  //console.log(props.note, 'in note screen')
+
+  const handleDelete = (index) => {
+    let newArray = [...props.notes];
+    let trashedArray = newArray.splice(index, 1);
+    console.log('new note  items ', newArray[0], newArray[1], newArray[2])
+    props.setNotes(newArray);
+    props.setMoveToTrash(trashedArray)
+
+    //  console.log('trashed', trashedArray[0])
+    let newTrash = [trashedArray, ...props.moveToTrash];
+    props.setMoveToTrash(newTrash);
+  }
   return (
     <SafeAreaView>
+
       {/*  header buttons */}
       <View style={styles.headerWrapper}>
         <View style={styles.titleWrapper}>
@@ -40,26 +53,47 @@ const Note = ({ navigation, ...props }) => {
           </TouchableOpacity>
         </View>
       </View>
+
       {/* body  for note screen    <Text>{props.notes[0]}</Text>*/}
       <View>
-        {props.notes.map((item, index) => {
-          return (
-            <View key={index}>
-              <View style={{flexDirection:'row'}}>
-                <View style={{flexDirection:'row'}} >
-                  <Text>{index}</Text>
-                  <Text>{item} </Text>
-                </View>
-                <TouchableOpacity>
-                  <Text>X</Text>
-                </TouchableOpacity>
-              </View>
-
+      <ScrollView style={{ marginTop: 10 }}>
+        {props.notes.length === 0 ?
+          (
+            <View style={{ justifyContent: 'center', margin: 10, width: '70%', alignItems: 'center', }}>
+              <Text style={{ fontSize: 20, color: 'blue' }}>noting to show yet Press plus icon to add a new note ..</Text>
             </View>
-          )
 
-        })}
+          ) :
+          props.notes.map((item, index) => {
+            return (
+           
+                <View key={index} style={{ justifyContent: 'center', alignItems: 'center', }}>
+
+                  <View style={styles.noteContainer}>
+                    <View style={styles.notePartWrapper} >
+                      <Text style={styles.text} numberOfLines={2} ellipsizeMode="tail">{index + 1}.{item} </Text>
+                      <TouchableOpacity style={styles.buttonText} onPress={() => handleDelete(index)}>
+                        <Text style={{ fontSize: 14, color: 'white', fontWeight: 500 }} >X</Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.notePartWrapper} >
+                      <Text style={{ fontSize: 14, color: 'gray', fontWeight: 500, flex: 1, margin: 2 }}>Created at : {props.date}  </Text>
+                      <TouchableOpacity style={styles.buttonText2}>
+                        <Text style={{ fontSize: 15, color: 'black' }} > Edit </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                  </View>
+
+                </View>
+           
+            )
+
+          })}
+          </ScrollView>
       </View>
+
 
 
     </SafeAreaView>
@@ -68,77 +102,3 @@ const Note = ({ navigation, ...props }) => {
 
 export default Note;
 
-const styles = StyleSheet.create({
-  headerWrapper: {
-    flexDirection: 'row',
-    width: '100%',
-    height: 90,
-    padding: 5,
-    backgroundColor: 'white',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    alignItems: 'center',
-    borderBottomColor: 'blue',
-    borderBottomWidth: 3.5,
-    paddingBottom: -10,
-    paddingTop: 10,
-
-
-
-  },
-  iconWrapper: {
-    backgroundColor: 'blue',
-    padding: 8,
-    borderRadius: 22,
-    justifyContent: 'center',
-    marginHorizontal: 5
-
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    marginHorizontal: 3,
-    justifyContent: 'center'
-  },
-  title: {
-    fontSize: 25, color: 'blue',
-    marginHorizontal: 5,
-    fontWeight: 700
-
-  },
-  titleWrapper: {
-    marginTop: -5,
-    padding: 5,
-
-  },
-  total: {
-    fontSize: 15,
-    margin: 5,
-    color: 'blue',
-    fontWeight: 500
-  },
-  serachInput: {
-    fontSize: 18
-  },
-  inputWrapper: {
-    width: '70%',
-    marginBottom: -5,
-    marginHorizontal: 5,
-    borderRadius: 10,
-    borderColor: 'black',
-    borderBottomWidth: 2,
-    margin: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-
-  },
-  serachContainer: {
-    flexDirection: 'row',
-    padding: 2,
-    paddingTop: 5,
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'space-around'
-
-  }
-})

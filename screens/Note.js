@@ -56,17 +56,17 @@ const Note = ({ navigation, ...props }) => {
 
       {/* body  for note screen    <Text>{props.notes[0]}</Text>*/}
       <View>
-      <ScrollView style={{ marginTop: 10 }}>
-        {props.notes.length === 0 ?
-          (
-            <View style={{ justifyContent: 'center', margin: 10, width: '70%', alignItems: 'center', }}>
-              <Text style={{ fontSize: 20, color: 'blue' }}>noting to show yet Press plus icon to add a new note ..</Text>
-            </View>
+        <ScrollView style={{ marginTop: 10 }}>
+          {props.notes.length === 0 ?
+            (
+              <View style={{ justifyContent: 'center', margin: 10, width: '70%', alignItems: 'center', }}>
+                <Text style={{ fontSize: 20, color: 'blue' }}>noting to show yet Press plus icon to add a new note ..</Text>
+              </View>
 
-          ) :
-          props.notes.map((item, index) => {
-            return (
-           
+            ) :
+            props.notes.map((item, index) => {
+              return (
+
                 <View key={index} style={{ justifyContent: 'center', alignItems: 'center', }}>
 
                   <View style={styles.noteContainer}>
@@ -79,7 +79,10 @@ const Note = ({ navigation, ...props }) => {
 
                     <View style={styles.notePartWrapper} >
                       <Text style={{ fontSize: 14, color: 'gray', fontWeight: 500, flex: 1, margin: 2 }}>Created at : {props.date}  </Text>
-                      <TouchableOpacity style={styles.buttonText2}>
+                      <TouchableOpacity style={styles.buttonText2} onPress={() => navigation.navigate('EditNote', {
+                        index: index,
+                        item: item
+                      })}>
                         <Text style={{ fontSize: 15, color: 'black' }} > Edit </Text>
                       </TouchableOpacity>
                     </View>
@@ -87,11 +90,11 @@ const Note = ({ navigation, ...props }) => {
                   </View>
 
                 </View>
-           
-            )
 
-          })}
-          </ScrollView>
+              )
+
+            })}
+        </ScrollView>
       </View>
 
 

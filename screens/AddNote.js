@@ -5,8 +5,6 @@ import { KeyboardAvoidingView, TextInput, Platform, ScrollView, StyleSheet, Touc
 
 //in this code block especially touchablewithoutfeedback is important for customer usage
 const AddNote = ({ ...props }) => {
-
- 
   return (
     <View>
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} >

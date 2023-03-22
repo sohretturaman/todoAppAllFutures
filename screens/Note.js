@@ -12,7 +12,7 @@ const Note = ({ navigation, ...props }) => {
   const handleDelete = (index) => {
     let newArray = [...props.notes];
     let trashedArray = newArray.splice(index, 1);
-    console.log('new note  items ', newArray[0], newArray[1], newArray[2])
+    // console.log('new note  items ', newArray[0], newArray[1], newArray[2])
     props.setNotes(newArray);
     props.setMoveToTrash(trashedArray)
 

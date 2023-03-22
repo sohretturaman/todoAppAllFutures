@@ -38,7 +38,7 @@ const App = () => {
           {props=><AddNote {...props} setNote={setNote} note={note} setNotes={setNotes} notes= {notes} handleAddButton={handleAddButton} />}
          </Stack.Screen>
          <Stack.Screen name='DeletedNote'>
-          {props=><DeleteNote {...props} note={note} setNote={setNote} date={date} moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash} />}
+          {props=><DeleteNote {...props} note={note} setNote={setNote}  notes={notes} setNotes ={setNotes} date={date} moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash} />}
          </Stack.Screen>
       </Stack.Navigator>
      </NavigationContainer>

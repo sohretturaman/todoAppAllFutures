@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NoteComp from '../components/NoteComp';
 import { styles } from './styles'
 
+
+
 const Note = ({ navigation, ...props }) => {
   //console.log(props.note, 'in note screen')
 
@@ -20,6 +22,8 @@ const Note = ({ navigation, ...props }) => {
     let newTrash = [trashedArray, ...props.moveToTrash];
     props.setMoveToTrash(newTrash);
   }
+
+
   return (
     <SafeAreaView>
 
@@ -95,6 +99,10 @@ const Note = ({ navigation, ...props }) => {
 
             })}
         </ScrollView>
+
+        <TouchableOpacity onPress={()=>navigation.navigate('ShowOnCalendar')}>
+           <Text>Go to Calendar</Text>
+        </TouchableOpacity>
       </View>
 
 

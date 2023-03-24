@@ -1,18 +1,36 @@
 import { StyleSheet, Text, View, StatusBar } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Note from "./screens/Note"
 import AddNote from './screens/AddNote'
 import DeleteNote from './screens/DeletedNote'
 import EditNote from './screens/EditNote'
+import ShowOnCalendar from './screens/ShowOnCalendar'
+import Moment from 'moment';
+import { format } from "date-fns";
+
 
 const Stack = createStackNavigator();
-const App = () => {
+const App = ({navigation}) => {
   const [note, setNote] = useState('');
   const [notes, setNotes] = useState([]);
   const [date, setDate] = useState(new Date().toUTCString());
+ const [dates,setDates] =useState([]);
   const [moveToTrash, setMoveToTrash] = useState([]);
+
+
+  function datePicker(){
+    Moment.locale('en');
+    let dt = date;
+     let formatted =Moment(dt).format( "yyyy-MM-DD H:mma");
+     console.log('formatted data ',formatted)
+     //setDate(formatted)
+     console.log('after format date',date)
+     setDates([formatted,...dates]);
+     console.log('dates data',dates[0],dates[1],dates[2])
+   }
+  
 
   const handleAddButton = () => {
 
@@ -21,10 +39,12 @@ const App = () => {
       const newNotes = [newNote, ...notes];
       setNotes(newNotes);
       setNote('')
-
+      datePicker();
+    
     } else {   
       console.log('note didnt add')
     }  
+    
   }
 
 
@@ -43,8 +63,9 @@ const App = () => {
         <Stack.Screen name='EditNote'  >
           {props => <EditNote {...props} note={note} setNotes={setNotes} notes={notes} />}
         </Stack.Screen>
-
-
+       <Stack.Screen name='ShowOnCalendar' >
+        {props=><ShowOnCalendar {...props} note={note} notes={notes} setDate={setDate} date={setDate} setDates={setDates} dates={dates}/>}
+       </Stack.Screen>
 
       </Stack.Navigator>
     </NavigationContainer>

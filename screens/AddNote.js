@@ -1,21 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native'
 import { KeyboardAvoidingView, TextInput, Platform, ScrollView, StyleSheet, TouchableWithoutFeedback, Text, View, Keyboard } from 'react-native'
+import Moment from 'moment'
 
 
 //in this code block especially touchablewithoutfeedback is important for customer usage
-const AddNote = ({ ...props }) => {
+const AddNote = ({navigation, ...props }) => {
+  
+  const [title,setTitle]=useState('');
+  const [disc,setDisc]=useState('');
+
+  handleButton=()=>{
+    Moment.locale('EN'); 
+   // let d = new Date()
+    let formattedDate=  Moment().format('YYYY-MM-DD h:mma')
+  
+    if(title.trim().length!==0 &&disc.trim().length !== 0){
+      props.handleNotes(title,disc,formattedDate);
+      navigation.navigate('Note')   
+    }else{
+      Alert.alert('please write something')
+    }
+ 
+
+  }
   return (
     <View>
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-          <View style={{ justifyContent: 'space-between' }}>
-            <TextInput style={styles.input} placeholder='write a note ...' placeholderTextColor={'black'}
-              multiline={true}
-              value={props.note}
-              onChangeText={(value) => props.setNote(value)}
+          <View style={{ justifyContent: 'space-between' }}> 
+            <View style={styles.input}>
+            <TextInput style={{fontSize:20,borderBottomColor:'black',borderBottomWidth:0.2,paddingBottom:5,}} placeholder='title' placeholderTextColor={'black'}
+              multiline={false}
+              maxLength={40}
+              value={title}
+              onChangeText={(value) => setTitle(value)}
             />
-            <TouchableOpacity style={styles.buttonWrapper} onPress={props.handleAddButton}>
+            <TextInput style={{fontSize: 20,}} placeholder='write a note ...' placeholderTextColor={'black'}
+              multiline={true}
+              value={disc}
+              onChangeText={(value) => setDisc(value)}
+            />
+            </View>
+
+           
+            <TouchableOpacity style={styles.buttonWrapper} onPress={()=>{handleButton()}}>
               <Text style={styles.text}>Add</Text>
             </TouchableOpacity>
           </View>
@@ -34,7 +64,7 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
     borderWidth: 3,
     margin: 15,
-    fontSize: 20,
+    
     height: 300,
     width: '90%',
     paddingBottom: 240,

@@ -5,6 +5,7 @@ import {
     TextInput, Platform, Keyboard
 
 } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -12,11 +13,15 @@ const EditNote = ({route,navigation, ...props }) => {
     const {item,index}=route.params;
     const [editNote,setEditNote] = useState(item);
 
-    const hadleEditNote=()=>{
+    const hadleEditNote= async()=>{
        let editedNotes = [...props.notes];
        editedNotes[index]=editNote;
-       props.setNotes(editedNotes);
+       //props.setNotes(editedNotes);
 
+     await AsyncStorage.setItem('savedNotes',JSON.stringify(editedNotes)).then(()=>{
+        props.setNotes(editedNotes)
+     }).catch((err)=>console.log(err))
+        
        navigation.navigate('Note');
     }
     

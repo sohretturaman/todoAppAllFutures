@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView,Alert } from 'react-native'
 import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { JsxFlags } from 'typescript'
 
 
 
@@ -11,17 +13,29 @@ const DeletedNote = ({ ...props }) => {
   const deleteTrash = () => {
     let deletedNotes = [...props.moveToTrash]
     deletedNotes = [];
-    props.setMoveToTrash([]);
+    //props.setMoveToTrash([]);
+
+    AsyncStorage.setItem('savedNotes',JSON.stringify(deletedNotes)).then(()=>{
+      props.setMoveToTrash([]);
+    })
   }
 
   const undoNote = (index) => {
     let newArray = [...props.moveToTrash];
     let undoNote = newArray.splice(index, 1);
-    props.setMoveToTrash(newArray);
-    props.setNotes(undoNote);
+   // props.setMoveToTrash(newArray);
+   // props.setNotes(undoNote);
 
     let newNotes = [undoNote, ...props.notes]
-    props.setNotes(newNotes);
+   // props.setNotes(newNotes);
+
+    //check here
+    AsyncStorage.setItem('savedNotes',JSON.stringify(newNotes)).then(()=>{
+      props.setNotes(newNotes);   
+    }).catch((err)=>console.log(err))
+    AsyncStorage.setItem('savedTrashs',JSON.stringify(newArray)).then(()=>{
+      props.setMoveToTrash(newArray);   
+    }).catch((err)=>console.log(err))
   }
 
   function undoAll() {
@@ -38,9 +52,16 @@ const DeletedNote = ({ ...props }) => {
           undoNotes.push(item)
         })
 
-        props.setMoveToTrash([]);
-        props.setNotes(undoNotes);
-
+        //props.setMoveToTrash([]);
+        //props.setNotes(undoNotes);
+        
+        AsyncStorage.setItem('savedNotes',JSON.stringify(undoNotes)).then(()=>{
+          props.setNotes(undoNotes);
+        }).catch((err)=>console.log(err))
+    
+        AsyncStorage.setItem('savedTrashs',JSON.stringify(newTrashArray)).then(()=>{
+          props.setMoveToTrash([])
+        }).catch((err)=>console.log(err))
 
       }
     }
@@ -52,8 +73,14 @@ const DeletedNote = ({ ...props }) => {
   function deletePermenant(index) {
     let newArray = [...props.moveToTrash];
     let deletedItem = newArray.splice(index, 1);
-    props.setMoveToTrash(newArray);
+  
+    //props.setMoveToTrash(newArray);
     console.log(deletedItem, 'been deleted successfully')
+    
+    AsyncStorage.setItem('savedTrashs',JSON.stringify(newArray)).then(()=>{
+      props.setMoveToTrash(newArray)
+    }).catch((err)=>console.log(err))
+    
 
   }
   return (

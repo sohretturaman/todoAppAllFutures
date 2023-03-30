@@ -1,13 +1,27 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import {Calendar,CalendarList,Agenda} from 'react-native-calendars';
+import Moment from 'moment';
+import { format } from "date-fns";
 
 const ShowOnCalendar = ({...props}) => {
     console.log('my date data ',props.dates[0],props.dates[1])
     const [selected,setSelected]=useState('')
     const hadleCalendar=(day)=>{ 
-      setSelected(day.dateString);
-    }
+      let dayString= day.dateString;
+     // console.log('day pressed',day)
+      console.log('pressed day is formatted to datestring ',dayString)
+      setSelected(dayString);
+      let datesString=[...props.dates]
+   
+      if(dayString=datesString[0]){
+        console.log('it is equal')
+      }else{
+        console.log('it is not equal ',datesString[0])
+      }
+
+  }
+
   return (
     <View>
         <Calendar
@@ -19,11 +33,9 @@ const ShowOnCalendar = ({...props}) => {
   }}
   // Specify the current date
   current={'2023-03-01'}
-  // Callback that gets called when the user selects a day
- // onDayPress={day => {
-  //  console.log('selected day', day); }}
+
   onDayPress={day => {
-    console.log('day pressed')
+    //console.log('day pressed')
     hadleCalendar(day);
     
   }}
@@ -31,15 +43,16 @@ const ShowOnCalendar = ({...props}) => {
 
 
   markedDates={{
-    [props.dates]:{selected:true,disableTouchEvent:false,selectedDotColor:'red'},
-    [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
+   [props.dates]:{selected:true,disableTouchEvent:true,selectedDotColor: 'orange'},
+    [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'},
+    '2023-03-17': {marked: true,selectedDotColor:'red'},
 
   }}
 
 />
 
 <View>
-   <TouchableOpacity onPress={()=>hadleCalendar()}>
+   <TouchableOpacity >
      <Text> data will be here from calendar {selected}</Text>
      <Text>informtation aboout dates {props.dates} and  my note is </Text>
    </TouchableOpacity>

@@ -80,7 +80,7 @@ export const styles = StyleSheet.create({
       padding: 7,
       borderRadius:10,
       width:'80%',
-      height:120,
+      height:140,
       justifyContent:'space-between',
       borderColor:'black',
       borderWidth:1.5,
@@ -93,8 +93,12 @@ export const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       margin:2,
-      
-     
+       
+    },
+    textWrapper:{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      margin:2,
     },
     text:{
         fontSize:18,

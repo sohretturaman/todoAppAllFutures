@@ -3,9 +3,9 @@ import { SafeAreaView, TextInput } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import NoteComp from '../components/NoteComp';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { styles } from './styles'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Note = ({ navigation, ...props }) => {
@@ -14,13 +14,40 @@ const Note = ({ navigation, ...props }) => {
   const handleDelete = (index) => {
     let newArray = [...props.notes];
     let trashedArray = newArray.splice(index, 1);
-    // console.log('new note  items ', newArray[0], newArray[1], newArray[2])
-    props.setNotes(newArray);
-    props.setMoveToTrash(trashedArray)
+    // props.setNotes(newArray);
+    //  props.setMoveToTrash(trashedArray)
 
-    //  console.log('trashed', trashedArray[0])
     let newTrash = [trashedArray, ...props.moveToTrash];
-    props.setMoveToTrash(newTrash);
+    // props.setMoveToTrash(newTrash);
+
+    // asnc storage added 
+    AsyncStorage.setItem('savedNotes', JSON.stringify(newArray)).then(() => {
+      props.setNotes(newArray);
+    })
+    AsyncStorage.setItem('savedTrashs', JSON.stringify(newTrash)).then(() => {
+      props.setMoveToTrash(newTrash);
+    }).catch((err) => console.log(err))
+  }
+
+
+
+  function clearAll() {
+    let emptyNotes = [...props.notes];
+    let newTrash = [...props.moveToTrash];
+    emptyNotes.forEach((item, index) => {
+      newTrash.push(item);
+    })
+
+    //props.setNotes([]);
+    // props.setMoveToTrash(newTrash);
+
+    AsyncStorage.setItem('savedNotes', JSON.stringify([])).then(() => {
+      props.setNotes([]); //here is imp if you put emptynotes it not delete notes
+    }).catch((err) => console.log('error here', err))
+
+    AsyncStorage.setItem('savedTrashs', JSON.stringify(newTrash)).then(() => {
+      props.setMoveToTrash(newTrash);
+    }).catch((err) => console.log('error here', err))
   }
 
 
@@ -34,7 +61,7 @@ const Note = ({ navigation, ...props }) => {
           <Text style={styles.total}>Total :{props.notes.length} </Text>
         </View>
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.iconWrapper} onPress={() => navigation.navigate('DeletedNote')}>
+          <TouchableOpacity style={styles.iconWrapper} onPress={() => { }}>
             <Icon name='delete' size={25} color='white' />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconWrapper} onPress={() => { navigation.navigate('AddNote') }}>
@@ -52,15 +79,15 @@ const Note = ({ navigation, ...props }) => {
         </View>
         <View style={styles.iconContainer}>
 
-          <TouchableOpacity style={styles.iconWrapper}>
+          <TouchableOpacity style={styles.iconWrapper} onPress={() => { }}>
             <Text style={{ color: 'white', fontSize: 15, fontWeight: 500 }}>clear </Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* body  for note screen    <Text>{props.notes[0]}</Text>*/}
-      <View>
-        <ScrollView style={{ marginTop: 10 }}>
+      {/* body  for note screen  */}
+      <View style={{paddingBottom:10,height:'70%',marginTop: 10 }}>
+        <ScrollView>
           {props.notes.length === 0 ?
             (
               <View style={{ justifyContent: 'center', margin: 10, width: '70%', alignItems: 'center', }}>
@@ -75,14 +102,20 @@ const Note = ({ navigation, ...props }) => {
 
                   <View style={styles.noteContainer}>
                     <View style={styles.notePartWrapper} >
-                      <Text style={styles.text} numberOfLines={2} ellipsizeMode="tail">{index + 1}.{item} </Text>
+                      <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">{index + 1}.{item.title} </Text>
                       <TouchableOpacity style={styles.buttonText} onPress={() => handleDelete(index)}>
                         <Text style={{ fontSize: 14, color: 'white', fontWeight: 500 }} >X</Text>
                       </TouchableOpacity>
+
                     </View>
 
+                    <View style={styles.textWrapper}>
+                      <Text style={styles.text} numberOfLines={2} ellipsizeMode="tail">{item.disc} </Text>
+                    </View>
+
+
                     <View style={styles.notePartWrapper} >
-                      <Text style={{ fontSize: 14, color: 'gray', fontWeight: 500, flex: 1, margin: 2 }}>Created at : {props.date}  </Text>
+                      <Text style={{ fontSize: 14, color: 'gray', fontWeight: 500, flex: 1, margin: 2 }}>Created at : {item.date}  </Text>
                       <TouchableOpacity style={styles.buttonText2} onPress={() => navigation.navigate('EditNote', {
                         index: index,
                         item: item
@@ -99,11 +132,14 @@ const Note = ({ navigation, ...props }) => {
 
             })}
         </ScrollView>
-
-        <TouchableOpacity onPress={()=>navigation.navigate('ShowOnCalendar')}>
-           <Text>Go to Calendar</Text>
-        </TouchableOpacity>
+       
       </View>
+      <TouchableOpacity style={{alignSelf:'flex-end',marginRight:10,margin:3,borderRadius:24,
+       padding:4,height:50,width:50,backgroundColor:'blue',justifyContent:'center',alignItems:'center'}}>
+           <Ionicons name='calendar' size={27} color={'white'}/>
+      </TouchableOpacity>
+
+      
 
 
 

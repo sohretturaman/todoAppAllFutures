@@ -1,41 +1,33 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView,Alert } from 'react-native'
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { JsxFlags } from 'typescript'
+
 
 
 
 
 const DeletedNote = ({ ...props }) => {
 
-  //console.log(props.moveToTrash[0],props.moveToTrash.length)
+ console.log('in deleted screen',props.moveToTrash)
 
+ {/**
   const deleteTrash = () => {
     let deletedNotes = [...props.moveToTrash]
     deletedNotes = [];
-    //props.setMoveToTrash([]);
+    props.setMoveToTrash([]);
 
-    AsyncStorage.setItem('savedNotes',JSON.stringify(deletedNotes)).then(()=>{
-      props.setMoveToTrash([]);
-    })
   }
 
   const undoNote = (index) => {
     let newArray = [...props.moveToTrash];
     let undoNote = newArray.splice(index, 1);
-   // props.setMoveToTrash(newArray);
-   // props.setNotes(undoNote);
+    props.setMoveToTrash(newArray);
+    props.setNotes(undoNote);
 
     let newNotes = [undoNote, ...props.notes]
-   // props.setNotes(newNotes);
+    props.setNotes(newNotes);
 
-    //check here
-    AsyncStorage.setItem('savedNotes',JSON.stringify(newNotes)).then(()=>{
-      props.setNotes(newNotes);   
-    }).catch((err)=>console.log(err))
-    AsyncStorage.setItem('savedTrashs',JSON.stringify(newArray)).then(()=>{
-      props.setMoveToTrash(newArray);   
-    }).catch((err)=>console.log(err))
+   
   }
 
   function undoAll() {
@@ -52,17 +44,9 @@ const DeletedNote = ({ ...props }) => {
           undoNotes.push(item)
         })
 
-        //props.setMoveToTrash([]);
-        //props.setNotes(undoNotes);
-        
-        AsyncStorage.setItem('savedNotes',JSON.stringify(undoNotes)).then(()=>{
+          props.setMoveToTrash([]);
           props.setNotes(undoNotes);
-        }).catch((err)=>console.log(err))
-    
-        AsyncStorage.setItem('savedTrashs',JSON.stringify(newTrashArray)).then(()=>{
-          props.setMoveToTrash([])
-        }).catch((err)=>console.log(err))
-
+        
       }
     }
 
@@ -74,45 +58,45 @@ const DeletedNote = ({ ...props }) => {
     let newArray = [...props.moveToTrash];
     let deletedItem = newArray.splice(index, 1);
   
-    //props.setMoveToTrash(newArray);
+    props.setMoveToTrash(newArray);
     console.log(deletedItem, 'been deleted successfully')
     
-    AsyncStorage.setItem('savedTrashs',JSON.stringify(newArray)).then(()=>{
-      props.setMoveToTrash(newArray)
-    }).catch((err)=>console.log(err))
-    
-
   }
+ */}
+
   return (
     <View>
       {/* header comp */}
       <View style={styles.headerContainer}>
-        <TouchableOpacity style={styles.buttonWrapper} onPress={() => undoAll()}>
+        <TouchableOpacity style={styles.buttonWrapper} onPress={() => {}}>
           <Text style={styles.title}>Undo All</Text>
         </TouchableOpacity>
         <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Total:{props.moveToTrash.length}  </Text>
-        <TouchableOpacity style={styles.buttonWrapper} onPress={deleteTrash}>
+        <TouchableOpacity style={styles.buttonWrapper} onPress={()=>{}}>
           <Text style={styles.title}>Empty</Text>
         </TouchableOpacity>
       </View>
-      {/* body comp  */}
 
+       {/**body comp  */}
       <ScrollView style={{ marginTop: 10 }}>
-        {/* body  for note screen    <Text>{props.notes[0]}</Text>*/}
         <View>
           {props.moveToTrash.map((item, index) =>
             <View key={index} style={{ justifyContent: 'center', alignItems: 'center', }}>
               <View style={styles.noteContainer}>
                 <View style={styles.notePartWrapper} >
-                  <Text style={styles.text} numberOfLines={2} ellipsizeMode="tail">{index + 1}.{item} </Text>
-                  <TouchableOpacity style={styles.buttonText2} onPress={() => undoNote(index)}>
+                  <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">{index + 1}.{item.title} </Text>
+                  <TouchableOpacity style={styles.buttonText2} onPress={() =>{}}>
                     <Text style={{ fontSize: 15, color: 'black' }} >Undo</Text>
                   </TouchableOpacity>
                 </View>
 
+                <View style={styles.textWrapper}>
+                      <Text style={styles.text} numberOfLines={2} ellipsizeMode="tail">{item.disc} </Text>
+                    </View>
+
                 <View style={styles.notePartWrapper} >
-                  <Text style={{ fontSize: 10, color: 'gray', fontWeight: 500, flex: 1, margin: 2 }}>Created at : {props.date}  </Text>
-                  <TouchableOpacity style={styles.buttonText2} onPress={() => deletePermenant(index)}>
+                  <Text style={{ fontSize: 10, color: 'gray', fontWeight: 500, flex: 1, margin: 2 }}>Created at : {item.date}  </Text>
+                  <TouchableOpacity style={styles.buttonText2} onPress={() => {}}>
                     <Text style={{ fontSize: 15, color: 'black' }} >Delete</Text>
                   </TouchableOpacity>
                 </View>
@@ -127,6 +111,7 @@ const DeletedNote = ({ ...props }) => {
 
 
       </ScrollView>
+      
 
     </View>
   )
@@ -183,8 +168,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 2,
-
-
+  },
+  textWrapper:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 2,
   },
   text: {
     fontSize: 18,

@@ -9,24 +9,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Note = ({ navigation, ...props }) => {
-  //console.log(props.note, 'in note screen')
+//console.log('in note Screen movetoTrash is 2 D or not ',props.moveToTrash)
 
   const handleDelete = (index) => {
     let newArray = [...props.notes];
-    let trashedArray = newArray.splice(index, 1);
-    // props.setNotes(newArray);
-    //  props.setMoveToTrash(trashedArray)
+   // let myTrash=[...props.moveToTrash]
+    let deletedItem =newArray.splice(index,1)
+   
+     
+    let newTrash = [ ...deletedItem,...props.moveToTrash];
+    let pushedData= newTrash.push(deletedItem);
+    console.log('new trash',newTrash)
+    console.log('pushed data',pushedData)
+    console.log('deleted item',deletedItem)
+    props.setMoveToTrash(newTrash)
 
-    let newTrash = [trashedArray, ...props.moveToTrash];
-    // props.setMoveToTrash(newTrash);
+    {/** 
+    try {
+      const data =  await AsyncStorage.getItem('saveNotes')
+      if (data!==null){
+        let parsed =[]
+        parsed =  JSON.parse(data);
+       
+       // console.log('parsed data here in delete',parsed)
+        let newData= parsed.filter(obj=>obj.id !==item.id);
+       // console.log('new data after filter',newData)
+        await AsyncStorage.setItem('saveNotes',JSON.parse(newData)).catch((err)=>console.log(err))    
+       
+      }
+      
+     } catch (error) {
+       console.log(error)
+     }
 
-    // asnc storage added 
-    AsyncStorage.setItem('savedNotes', JSON.stringify(newArray)).then(() => {
-      props.setNotes(newArray);
-    })
-    AsyncStorage.setItem('savedTrashs', JSON.stringify(newTrash)).then(() => {
-      props.setMoveToTrash(newTrash);
-    }).catch((err) => console.log(err))
+     */}
+
   }
 
 
@@ -38,16 +55,10 @@ const Note = ({ navigation, ...props }) => {
       newTrash.push(item);
     })
 
-    //props.setNotes([]);
-    // props.setMoveToTrash(newTrash);
+    props.setNotes([]);
+     props.setMoveToTrash(newTrash);
 
-    AsyncStorage.setItem('savedNotes', JSON.stringify([])).then(() => {
-      props.setNotes([]); //here is imp if you put emptynotes it not delete notes
-    }).catch((err) => console.log('error here', err))
-
-    AsyncStorage.setItem('savedTrashs', JSON.stringify(newTrash)).then(() => {
-      props.setMoveToTrash(newTrash);
-    }).catch((err) => console.log('error here', err))
+   
   }
 
 
@@ -61,7 +72,7 @@ const Note = ({ navigation, ...props }) => {
           <Text style={styles.total}>Total :{props.notes.length} </Text>
         </View>
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.iconWrapper} onPress={() => { }}>
+          <TouchableOpacity style={styles.iconWrapper} onPress={() => {navigation.navigate('DeletedNote')}}>
             <Icon name='delete' size={25} color='white' />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconWrapper} onPress={() => { navigation.navigate('AddNote') }}>
@@ -135,7 +146,9 @@ const Note = ({ navigation, ...props }) => {
        
       </View>
       <TouchableOpacity style={{alignSelf:'flex-end',marginRight:10,margin:3,borderRadius:24,
-       padding:4,height:50,width:50,backgroundColor:'blue',justifyContent:'center',alignItems:'center'}}>
+       padding:4,height:50,width:50,backgroundColor:'blue',justifyContent:'center',alignItems:'center'}}
+       onPress={()=>navigation.navigate('ShowOnCalendar')}
+       >
            <Ionicons name='calendar' size={27} color={'white'}/>
       </TouchableOpacity>
 

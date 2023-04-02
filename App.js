@@ -18,33 +18,58 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [moveToTrash, setMoveToTrash] = useState([]);
 
-  const handleNotes=(title,disc,time)=>{
-    console.log('handle notes worked ',title,disc,time)
-    const note ={
-      id :Math.random().toString(),
-      date:time,
-      title:title,
-      disc:disc
-    }
+  useEffect(()=>{
+    getNotes(); 
+  },[])
 
-    let newNotes= [note,...notes];
-    setNotes(newNotes); 
+
+const getNotes = async()=>{
+ try {
+  const data = await AsyncStorage.getItem('saveNotes')
+  if (data!==null){
+    let parsed =  JSON.parse(data);
+    setNotes(parsed);
+  }
+  
+ } catch (error) {
+   console.log(error)
+ }
   }
 
 
+  const handleNotes = (title, disc, time) => {
+    //console.log('handle notes worked ',title,disc,time)
+   const note ={
+      id: Math.random().toString(),
+      date: time,
+      title:title,
+      disc: disc
+    }
+
+  
+    let newNotes = [note,...notes];
+    AsyncStorage.setItem('saveNotes',JSON.stringify(newNotes)).then(()=>{
+      setNotes(newNotes); 
+    }).catch((err)=>console.log(err))
+    console.log('new note',newNotes)
+  
+   
+  }
+
+
+  const NoteComp = (props) => (<Note {...props} setNotes={setNotes} notes={notes} setMoveToTrash={setMoveToTrash} moveToTrash={moveToTrash} />)
+  const AddNoteComp = (props) => (<AddNote {...props} setNotes={setNotes} notes={notes} handleNotes={handleNotes} />)
+  const DelNoteComp = (props) => (<DeleteNote {...props} notes={notes} setNotes={setNotes} moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash} />)
+ // const EditNoteComp = (props) => (<EditNote {...props} setNotes={setNotes} notes={notes} />)
+  const CalendarComp = (props) => (<ShowOnCalendar {...props} setNotes={setNotes} notes={notes} />)
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: true }}>
-
-      <Stack.Screen name='Note'>
-      {props => <Note {...props} setNotes={setNotes} notes={notes} setMoveToTrash={setMoveToTrash} moveToTrash={moveToTrash}
-          />}
-      </Stack.Screen>
-        <Stack.Screen name='AddNote'> 
-         {props => <AddNote {...props} setNotes={setNotes} notes={notes} handleNotes={handleNotes}
-          />}
-          </Stack.Screen>
-       
+        <Stack.Screen name='Note' component={NoteComp} />
+        <Stack.Screen name='AddNote' component={AddNoteComp} />
+        <Stack.Screen name='DeletedNote' component={DelNoteComp} />
+        <Stack.Screen name='ShowOnCalendar'component={CalendarComp}/>
+      
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -60,14 +85,6 @@ const styles = StyleSheet.create({})
 /*
 
  
-        <Stack.Screen name='DeletedNote'>
-          {props => <DeleteNote {...props}  notes={notes} setNotes={setNotes} date={date} moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash} />}
-        </Stack.Screen>
-        <Stack.Screen name='EditNote'  >
-          {props => <EditNote {...props} setNotes={setNotes} notes={notes} />}
-        </Stack.Screen>
-        <Stack.Screen name='ShowOnCalendar' >
-          {props => <ShowOnCalendar {...props} note={note} notes={notes} setDate={setDate} date={setDate} />}
-        </Stack.Screen>
+       
 
 */

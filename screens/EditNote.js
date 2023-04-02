@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditNote = ({route,navigation, ...props }) => {
     const {item,index}=route.params;
-    const [editNote,setEditNote] = useState(item);
+    const [editNote,setEditNote] = useState(item.title,item.disc);
 
     const hadleEditNote= async()=>{
        let editedNotes = [...props.notes];

@@ -1,62 +1,82 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {Calendar,CalendarList,Agenda} from 'react-native-calendars';
 import Moment from 'moment';
 import { format } from "date-fns";
+import { FlatList } from 'react-native-gesture-handler';
+import { el } from 'date-fns/locale';
 
 const ShowOnCalendar = ({...props}) => {
-    console.log('my date data ',props.dates[0],props.dates[1])
     const [selected,setSelected]=useState('')
-    const hadleCalendar=(day)=>{ 
-      let dayString= day.dateString;
-     // console.log('day pressed',day)
-      console.log('pressed day is formatted to datestring ',dayString)
-      setSelected(dayString);
-      let datesString=[...props.dates]
-   
-      if(dayString=datesString[0]){
-        console.log('it is equal')
-      }else{
-        console.log('it is not equal ',datesString[0])
-      }
-
-  }
-
+  const [note,setNote]=useState([...props.notes])
+  const [dating,setDating]=useState([...props.notes])
+  const [myDate,setMyDate]=useState([])
+  console.log('note*****', note)
+  const newData = [];
+  const newData2 = [];
+        for (let item of note) {
+          newData.push({
+            [item.date.slice(0, 10)]:{selected:true,disableTouchEvent:true,selectedDotColor: 'orange'}
+          });
+        
+        }
+    const press =()=>{
+      for (let item of dating) {
+        console.log('item**********//', item.date.slice(0,10))
+        console.log('selected/////////***', selected)
+        var date =item.date.slice(0,10);
+        if(date===selected){
+            newData2.push({
+              note:item.disc,
+              title:item.title,
+              clock:item.date.slice(11,15)})
+        }else{
+          console.log('first')
+        }
+      }setMyDate(newData2);
+    }
+    useEffect(()=>{
+      },[myDate])
+        
+        
   return (
     <View>
         <Calendar
-  // Customize the appearance of the calendar
-  style={{
-    borderWidth: 1,
-    borderColor: 'gray',
-    height: 350
-  }}
+        style={{
+          borderWidth: 1,
+          borderColor: 'gray',
+          height: 350
+        }}
   // Specify the current date
-  current={'2023-03-01'}
+        current={'2023-03-01'}
 
-  onDayPress={day => {
-    //console.log('day pressed')
-    hadleCalendar(day);
-    
-  }}
-  // Mark specific dates as marked
+        onDayPress={day => {
+          console.log('day pressed',day)
+        setSelected(day.dateString)
+        console.log('seleceted',selected)
+        press();
+          
+        }}
+        
+        markedDates={newData.data}
 
+      />
 
-  markedDates={{
-   [props.dates]:{selected:true,disableTouchEvent:true,selectedDotColor: 'orange'},
-    [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'},
-    '2023-03-17': {marked: true,selectedDotColor:'red'},
-
-  }}
-
-/>
-
-<View>
-   <TouchableOpacity >
-     <Text> data will be here from calendar {selected}</Text>
-     <Text>informtation aboout dates {props.dates} and  my note is </Text>
-   </TouchableOpacity>
-   <Text> n{props.note}</Text>
+<View style={{padding:10}}>
+  <Text style={{fontWeight:'700',color:'black'}}>{selected}</Text>
+  <FlatList data={myDate} renderItem={(item)=>{
+    console.log('************item*****', item)
+    return(
+      <View style={{flex:1}}>
+        <View style={{ flexDirection:'row',justifyContent:'space-between',margin:10}}>
+          <Text>{item.item.title}</Text>
+          <Text>{item.item.clock}</Text>
+        </View>
+    <View>
+      <Text>{item.item.note}</Text></View> 
+    </View>
+    )
+  }}/>
 </View>
 
 

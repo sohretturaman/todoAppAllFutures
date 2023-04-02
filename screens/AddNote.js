@@ -16,7 +16,7 @@ const AddNote = ({navigation, ...props }) => {
    // let d = new Date()
     let formattedDate=  Moment().format('YYYY-MM-DD h:mma')
   
-    if(title.trim().length!==0 &&disc.trim().length !== 0){
+    if(title.trim().length!==0 && disc.trim().length !== 0){
       props.handleNotes(title,disc,formattedDate);
       navigation.navigate('Note')   
     }else{
@@ -37,7 +37,7 @@ const AddNote = ({navigation, ...props }) => {
               value={title}
               onChangeText={(value) => setTitle(value)}
             />
-            <TextInput style={{fontSize: 20,}} placeholder='write a note ...' placeholderTextColor={'black'}
+            <TextInput style={{fontSize: 20,  height: 250,textAlignVertical:'top'}} placeholder='write a note ...' placeholderTextColor={'black'}
               multiline={true}
               value={disc}
               onChangeText={(value) => setDisc(value)}
@@ -64,10 +64,9 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
     borderWidth: 3,
     margin: 15,
-    
+    textAlignVertical:'top',
     height: 300,
     width: '90%',
-    paddingBottom: 240,
     paddingHorizontal: 10,
   },
   buttonWrapper: {

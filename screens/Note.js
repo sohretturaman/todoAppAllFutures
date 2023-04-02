@@ -10,42 +10,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Note = ({ navigation, ...props }) => {
 //console.log('in note Screen movetoTrash is 2 D or not ',props.moveToTrash)
-
   const handleDelete = (index) => {
-    let newArray = [...props.notes];
-   // let myTrash=[...props.moveToTrash]
-    let deletedItem =newArray.splice(index,1)
-   
-     
+    let newNotes = [...props.notes];
+    let deletedItem =newNotes.splice(index,1)
     let newTrash = [ ...deletedItem,...props.moveToTrash];
-    let pushedData= newTrash.push(deletedItem);
-    console.log('new trash',newTrash)
-    console.log('pushed data',pushedData)
-    console.log('deleted item',deletedItem)
-    props.setMoveToTrash(newTrash)
+     
+    //props.setMoveToTrash(newTrash)
+    //props.setNotes(newNotes);
 
-    {/** 
-    try {
-      const data =  await AsyncStorage.getItem('saveNotes')
-      if (data!==null){
-        let parsed =[]
-        parsed =  JSON.parse(data);
-       
-       // console.log('parsed data here in delete',parsed)
-        let newData= parsed.filter(obj=>obj.id !==item.id);
-       // console.log('new data after filter',newData)
-        await AsyncStorage.setItem('saveNotes',JSON.parse(newData)).catch((err)=>console.log(err))    
-       
-      }
-      
-     } catch (error) {
-       console.log(error)
-     }
+    AsyncStorage.setItem('saveNotes',JSON.stringify(newNotes)).then(()=>{
+      props.setNotes(newNotes);
+    })
+    AsyncStorage.setItem('saveTrash',JSON.stringify(newTrash)).then(()=>{
+      props.setMoveToTrash(newTrash); 
+    }).catch((err)=>console.log(err))
 
-     */}
-
+ 
   }
-
 
 
   function clearAll() {
@@ -54,11 +35,17 @@ const Note = ({ navigation, ...props }) => {
     emptyNotes.forEach((item, index) => {
       newTrash.push(item);
     })
+    // props.setNotes([]);
+     //props.setMoveToTrash(newTrash); 
 
-    props.setNotes([]);
-     props.setMoveToTrash(newTrash);
+     AsyncStorage.setItem('saveNotes',JSON.stringify([])).then(()=>{
+      props.setNotes([]);
+     })
 
-   
+     AsyncStorage.setItem('saveTrash',JSON.stringify(newTrash)).then(()=>{
+      props.setMoveToTrash(newTrash);
+     }).catch((err)=>console.log(err)
+     )
   }
 
 
@@ -90,7 +77,7 @@ const Note = ({ navigation, ...props }) => {
         </View>
         <View style={styles.iconContainer}>
 
-          <TouchableOpacity style={styles.iconWrapper} onPress={() => { }}>
+          <TouchableOpacity style={styles.iconWrapper} onPress={() => {clearAll()}}>
             <Text style={{ color: 'white', fontSize: 15, fontWeight: 500 }}>clear </Text>
           </TouchableOpacity>
         </View>
@@ -145,8 +132,7 @@ const Note = ({ navigation, ...props }) => {
         </ScrollView>
        
       </View>
-      <TouchableOpacity style={{alignSelf:'flex-end',marginRight:10,margin:3,borderRadius:24,
-       padding:4,height:50,width:50,backgroundColor:'blue',justifyContent:'center',alignItems:'center'}}
+      <TouchableOpacity style={styles.calendar}
        onPress={()=>navigation.navigate('ShowOnCalendar')}
        >
            <Ionicons name='calendar' size={27} color={'white'}/>
@@ -161,4 +147,14 @@ const Note = ({ navigation, ...props }) => {
 }
 
 export default Note;
+
+
+{/**if you use filter function in handle delete
+  let filteredData = newArray.filter(obj=>obj.id !==item.id);
+    props.setNotes(filteredData);
+*/}
+   //here the deleted item is an array (handle delete func)
+    // that's why you have to configure it as an array if you use as [deletedItem,...props.moveToTrash]
+    //it will convert  your moveToTrash array to 2D array
+
 

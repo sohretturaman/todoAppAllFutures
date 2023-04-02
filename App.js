@@ -34,6 +34,17 @@ const getNotes = async()=>{
  } catch (error) {
    console.log(error)
  }
+
+try {
+  const trash = await AsyncStorage.getItem('saveTrash');
+  if(trash!==null){
+     let parsed = JSON.stringify(trash);
+     setMoveToTrash(parsed);
+  }
+  
+} catch (error) {
+  console.log(error)
+}
   }
 
 
@@ -60,7 +71,7 @@ const getNotes = async()=>{
   const NoteComp = (props) => (<Note {...props} setNotes={setNotes} notes={notes} setMoveToTrash={setMoveToTrash} moveToTrash={moveToTrash} />)
   const AddNoteComp = (props) => (<AddNote {...props} setNotes={setNotes} notes={notes} handleNotes={handleNotes} />)
   const DelNoteComp = (props) => (<DeleteNote {...props} notes={notes} setNotes={setNotes} moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash} />)
- // const EditNoteComp = (props) => (<EditNote {...props} setNotes={setNotes} notes={notes} />)
+  const EditNoteComp = (props) => (<EditNote {...props} setNotes={setNotes} notes={notes} />)
   const CalendarComp = (props) => (<ShowOnCalendar {...props} setNotes={setNotes} notes={notes} />)
   return (
     <NavigationContainer>
@@ -69,7 +80,7 @@ const getNotes = async()=>{
         <Stack.Screen name='AddNote' component={AddNoteComp} />
         <Stack.Screen name='DeletedNote' component={DelNoteComp} />
         <Stack.Screen name='ShowOnCalendar'component={CalendarComp}/>
-      
+        <Stack.Screen name='EditNote' component={EditNoteComp}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

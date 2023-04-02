@@ -6,22 +6,27 @@ import {
 
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Moment from 'moment'
+
 
 
 
 const EditNote = ({route,navigation, ...props }) => {
     const {item,index}=route.params;
-    const [editNote,setEditNote] = useState(item.title,item.disc);
 
-    const hadleEditNote= async()=>{
-       let editedNotes = [...props.notes];
-       editedNotes[index]=editNote;
-       //props.setNotes(editedNotes);
+    const [editDisc,setEditDisc] = useState(item.disc);
+    const [editDate,setEditDate]=useState(item.date)
+    
 
-     await AsyncStorage.setItem('savedNotes',JSON.stringify(editedNotes)).then(()=>{
-        props.setNotes(editedNotes)
-     }).catch((err)=>console.log(err))
-        
+    const hadleEditNote= ()=>{
+       let editNote = [...props.notes];    
+       editNote[index].disc = editDisc;
+      // props.setNotes(editNote);  
+
+        AsyncStorage.setItem('saveNotes',JSON.stringify(editNote)).then(()=>{
+            props.setNotes(editNote);
+        }).catch((err)=>console.log(err));
+
        navigation.navigate('Note');
     }
     
@@ -30,11 +35,12 @@ const EditNote = ({route,navigation, ...props }) => {
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.editContainer}>
+                         <Text>{editDate}</Text>
                         <TextInput placeholder='write a note...' 
                         style={styles.input}multiline={true}
                          placeholderTextColor={'black'} 
-                         value={editNote.toString()} 
-                         onChangeText={(text)=>setEditNote(text)}
+                         value={editDisc} 
+                         onChangeText={(text)=>setEditDisc(text)}
                          />
                         <TouchableOpacity style={styles.buttonWrapper} onPress={()=>hadleEditNote()}>
                             <Text style={styles.text}>Edit</Text>

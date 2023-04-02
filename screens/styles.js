@@ -138,6 +138,8 @@ export const styles = StyleSheet.create({
         borderTopWidth:2
         
 
-    }
+    },
+    calendar:{alignSelf:'flex-end',marginRight:10,margin:3,borderRadius:24,
+    padding:4,height:50,width:50,backgroundColor:'blue',justifyContent:'center',alignItems:'center'}
   
   })

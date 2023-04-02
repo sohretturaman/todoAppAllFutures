@@ -14,7 +14,7 @@ const AddNote = ({navigation, ...props }) => {
   handleButton=()=>{
     Moment.locale('EN'); 
    // let d = new Date()
-    let formattedDate=  Moment().format('YYYY-MM-DD h:mma')
+    let formattedDate =  Moment().format('YYYY-MM-DD h:mma')
   
     if(title.trim().length!==0 && disc.trim().length !== 0){
       props.handleNotes(title,disc,formattedDate);

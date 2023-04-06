@@ -62,13 +62,13 @@ try {
     AsyncStorage.setItem('saveNotes',JSON.stringify(newNotes)).then(()=>{
       setNotes(newNotes); 
     }).catch((err)=>console.log(err))
-    console.log('new note',newNotes)
+    // console.log('new note',newNotes)
   
    
   }
 
 
-  const NoteComp = (props) => (<Note {...props} setNotes={setNotes} notes={notes} setMoveToTrash={setMoveToTrash} moveToTrash={moveToTrash} />)
+  const NoteComp = (props) => (<Note {...props} setNotes={setNotes} notes={notes} setMoveToTrash={setMoveToTrash} moveToTrash={moveToTrash}  getNotes={getNotes}/>)
   const AddNoteComp = (props) => (<AddNote {...props} setNotes={setNotes} notes={notes} handleNotes={handleNotes} />)
   const DelNoteComp = (props) => (<DeleteNote {...props} notes={notes} setNotes={setNotes} moveToTrash={moveToTrash} setMoveToTrash={setMoveToTrash} />)
   const EditNoteComp = (props) => (<EditNote {...props} setNotes={setNotes} notes={notes} />)

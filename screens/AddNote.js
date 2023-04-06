@@ -16,7 +16,7 @@ const AddNote = ({navigation, ...props }) => {
    // let d = new Date()
     let formattedDate =  Moment().format('YYYY-MM-DD h:mma')
   
-    if(title.trim().length!==0 && disc.trim().length !== 0){
+    if(disc.trim().length !== 0){
       props.handleNotes(title,disc,formattedDate);
       navigation.navigate('Note')   
     }else{
@@ -31,13 +31,13 @@ const AddNote = ({navigation, ...props }) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
           <View style={{ justifyContent: 'space-between' }}> 
             <View style={styles.input}>
-            <TextInput style={{fontSize:20,borderBottomColor:'black',borderBottomWidth:0.2,paddingBottom:5,}} placeholder='title' placeholderTextColor={'black'}
+            <TextInput style={{fontSize:20,borderBottomColor:'grey',borderBottomWidth:0.2,paddingBottom:5,}} placeholder='title' placeholderTextColor={'grey'}
               multiline={false}
               maxLength={40}
               value={title}
               onChangeText={(value) => setTitle(value)}
             />
-            <TextInput style={{fontSize: 20,  height: 250,textAlignVertical:'top'}} placeholder='write a note ...' placeholderTextColor={'black'}
+            <TextInput style={{fontSize: 20,  height: 250,textAlignVertical:'top'}} placeholder='write a note ...' placeholderTextColor={'grey'}
               multiline={true}
               value={disc}
               onChangeText={(value) => setDisc(value)}

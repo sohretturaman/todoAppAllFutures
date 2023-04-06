@@ -101,13 +101,13 @@ export const styles = StyleSheet.create({
       margin:2,
     },
     text:{
-        fontSize:18,
+        fontSize:17,
         flex:5,
         color:'black',
         paddingRight:10
-        
-        
+                
     },
+
     buttonText:{
         padding:1,
         width:26,

@@ -13,10 +13,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Tasks from './screens/Tasks';
 import Translator from './screens/Translator';
-import Icon  from "react-native-vector-icons/MaterialCommunityIcons";
-import FontAwesome5  from "react-native-vector-icons/FontAwesome5";
-import { Image } from 'react-native';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {Image} from 'react-native';
+import HeaderComp from './components/HeaderComp';
+import { Dimensions } from 'react-native';
+import Settings from './screens/Settings';
 
 const TabStack = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -70,22 +72,61 @@ const App = () => {
 
   const BottomStack = () => {
     return (
-      <TabStack.Navigator>
-        <TabStack.Screen name="Note" component={NoteComp} options={{
-          tabBarIcon:({focused})=>( 
-          <Icon name='note-text-outline' size={30}  color={focused ?'#7E0CF5':'black'}/>
-        )}} />
-        <TabStack.Screen name="Task" component={Tasks}  options={{
-          tabBarIcon:()=>(
-            <Image source={require('./assets/checklist.png')}  style={{height:30,width:30}} />
-          )
-        }}/>
-        <TabStack.Screen name="Translator" component={Translator} options={{
-          tabBarIcon:({focused})=>(
-            <Icon name='translate' size={35}  color={focused ?'#7E0CF5':'black'}/>
-            
-          )
-        }}/>
+      <TabStack.Navigator
+        screenOptions={{
+          header: () => <HeaderComp />,
+          tabBarStyle:{
+            backgroundColor:'white',
+            borderTopColor:'#454545',
+            borderTopWidth:0.2,
+            padding:2,
+            height:Dimensions.get('window').height*0.07,
+            elevation:0.02,
+            shadowOffset:{height:5,width:1}
+          },
+          
+        }}
+        >
+        <TabStack.Screen
+          name="Note"
+          component={NoteComp}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name="note-text-outline"
+                size={30}
+                color={focused ? '#7E0CF5' : '#454545'}
+              />
+            ),
+             
+            tabBarShowLabel:false
+          }}
+        />
+        <TabStack.Screen
+          name="Task"
+          component={Tasks}
+          options={{
+            tabBarIcon: () => (
+              <Image
+                source={require('./assets/checklist.png')}
+                style={{height: 30, width: 30}}
+              />
+            ),
+          }}
+        />
+        <TabStack.Screen
+          name="Translator"
+          component={Translator}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name="translate"
+                size={30}
+                color={focused ? '#7E0CF5' : '#454545'}
+              />
+            ),
+          }}
+        />
       </TabStack.Navigator>
     );
   };
@@ -126,11 +167,16 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: true}}>
-        <Stack.Screen name="Bottom" component={BottomStack} />
+        <Stack.Screen
+          name="Bottom"
+          component={BottomStack}
+          options={{headerShown: false}}
+        />
         <Stack.Screen name="AddNote" component={AddNoteComp} />
         <Stack.Screen name="DeletedNote" component={DelNoteComp} />
         <Stack.Screen name="ShowOnCalendar" component={CalendarComp} />
         <Stack.Screen name="EditNote" component={EditNoteComp} />
+        <Stack.Screen name='Settings' component={Settings}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -139,7 +185,6 @@ const App = () => {
 export default App;
 
 const styles = StyleSheet.create({});
-
 
 //in this file we defined screen in a different way we can define component in screen commend
 

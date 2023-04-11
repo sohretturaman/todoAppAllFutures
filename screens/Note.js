@@ -1,15 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, TextInput, FlatList, ScrollView} from 'react-native';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  Dimensions,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {styles} from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AutocompleteInput from 'react-native-autocomplete-input';
+import NoteComp from '../components/NoteComp';
+import SearchComp from '../components/SearchComp';
+import AddButton from '../components/AddButton';
 
 const Note = ({navigation, ...props}) => {
   const [searchNote, setSearchNote] = useState('');
   const [searchedArray, setSearchedArray] = useState([]);
+  console.log('my notes', props.notes);
 
   const handleDelete = index => {
     let newNotes = [...props.notes];
@@ -50,34 +61,44 @@ const Note = ({navigation, ...props}) => {
 
   const handleSearch = value => {
     setSearchNote(value);
-    const notes =[...props.notes]
-   
- //   const arraySearched = props.notes.filter(item => {
+    const notes = [...props.notes];
+
+    //   const arraySearched = props.notes.filter(item => {
     //  if (item.title.toLowerCase().includes(searchNote.toLowerCase()))
     //    return item;
- //   });
+    //   });
 
-    for (let item of notes){
-     console.log('my item',item);
-     
-      if (item.title.toLowerCase().includes(searchNote.toLowerCase())|| item.disc.toLowerCase().includes(searchNote.toLowerCase())){
+    for (let item of notes) {
+      console.log('my item', item);
+
+      if (
+        item.title.toLowerCase().includes(searchNote.toLowerCase()) ||
+        item.disc.toLowerCase().includes(searchNote.toLowerCase())
+      ) {
         searchedArray.push(item);
       }
-     console.log('pushed items',searchedArray)
-        
+      console.log('pushed items', searchedArray);
     }
 
-   // console.log('array searched', arraySearched);
+    // console.log('array searched', arraySearched);
 
     if (searchedArray.length) {
       console.log('array saved');
-     // props.setNotes([searchedArray]); // you have to  give with [...arraysearched it gives error]
+      // props.setNotes([searchedArray]); // you have to  give with [...arraysearched it gives error]
     }
   };
 
+  const handleEdit = (item, index) => {
+    console.log('handle note çalıştı');
+
+    navigation.navigate('EditNote', {
+      index: index,
+      item: item,
+    });
+  };
   return (
-    <SafeAreaView>
-      {/*  header buttons */} 
+    <SafeAreaView style={styles.mainContainer}>
+      {/*  header buttons   
       <View style={styles.headerWrapper}>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Your Notes...</Text>
@@ -99,165 +120,43 @@ const Note = ({navigation, ...props}) => {
             <Icon name="plus" size={28} color={'white'} />
           </TouchableOpacity>
         </View>
-      </View>
-      {/*input search container */}
-      <View style={styles.serachContainer}>
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.serachInput}
-            placeholder="search a note..."
-            placeholderTextColor={'black'}
-            value={searchNote}
-            onChangeText={handleSearch}
-          />
+      </View> 
+     */}
 
-          <TouchableOpacity style={{paddingHorizontal: 5}} onPress={() => {}}>
-            <Icon name="note-search-outline" size={25} color={'black'} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity
-            style={styles.iconWrapper}
-            onPress={() => {
-              clearAll();
-            }}>
-            <Text style={{color: 'white', fontSize: 15, fontWeight: 500}}>
-              clear{' '}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/**
-      <View style={{marginTop:40}}>
-      <AutocompleteInput
-      data={[...props.notes]}
-      value={searchNote}
-      onChangeText={handleSearch}
-      flatListProps={{
-        keyExtractor: (_, idx) => idx,
-        renderItem: ({ item }) => <Text>{item.title}</Text>,
-      }}
-    />
-     </View>
- */}
-
-{
-/* body  for note screen  */
-}
-      {searchNote.trim().length == 0
-        ?(
-            <View style={{paddingBottom: 10, height: '70%', marginTop: 10}}>
-              <ScrollView>
-                {props.notes.length === 0 ? (
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      margin: 10,
-                      width: '70%',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{fontSize: 20, color: 'blue'}}>
-                      noting to show yet Press plus icon to add a new note ..
-                    </Text>
-                  </View>
-                ) : (
-                  props.notes.map((item, index) => {
-                    return (
-                      <View
-                        key={index}
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <View style={styles.noteContainer}>
-                          <View style={styles.notePartWrapper}>
-                            {item.title ? (
-                              <Text
-                                style={[styles.text, {fontSize: 20}]}
-                                numberOfLines={1}
-                                ellipsizeMode="tail">
-                                {index + 1}.
-                                {item.title ? item.title : item.disc}{' '}
-                              </Text>
-                            ) : (
-                              <Text
-                                style={styles.text}
-                                numberOfLines={3}
-                                ellipsizeMode="tail">
-                                {index + 1}.{item.disc}{' '}
-                              </Text>
-                            )}
-
-                            <TouchableOpacity
-                              style={styles.buttonText}
-                              onPress={() => handleDelete(index)}>
-                              <Text
-                                style={{
-                                  fontSize: 14,
-                                  color: 'white',
-                                  fontWeight: 500,
-                                }}>
-                                X
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-
-                          <View style={styles.textWrapper}>
-                            <Text
-                              style={styles.text}
-                              numberOfLines={2}
-                              ellipsizeMode="tail">
-                              {item.title ? item.disc : ''}{' '}
-                            </Text>
-                          </View>
-
-                          <View style={styles.notePartWrapper}>
-                            <Text
-                              style={{
-                                fontSize: 14,
-                                color: 'gray',
-                                fontWeight: 500,
-                                flex: 1,
-                                margin: 2,
-                              }}>
-                              Created at : {item.date}{' '}
-                            </Text>
-                            <TouchableOpacity
-                              style={styles.buttonText2}
-                              onPress={() =>
-                                navigation.navigate('EditNote', {
-                                  index: index,
-                                  item: item,
-                                })
-                              }>
-                              <Text style={{fontSize: 15, color: 'black'}}>
-                                {' '}
-                                Edit{' '}
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </View>
-                    );
-                  })
-                )}
-              </ScrollView>
+      <View style={styles.bodyWrapper}>
+        <ScrollView>
+          <SearchComp handleSearch={handleSearch} searchNote={searchNote} />
+          {props.notes.length === 0 ? (
+            <View
+              style={{
+                justifyContent: 'center',
+                margin: 10,
+                width: '70%',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontSize: 20, color: 'blue'}}>
+                noting to show yet Press plus icon to add a new note ..
+              </Text>
             </View>
-          )
-        : searchedArray.map((item, index) => {
-            return (
-              <View key={item}>
-                <Text>my item{item.title}</Text>
-              </View>
-            );
-          })}
+          ) : (
+            props.notes.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleEdit(item, index)}>
+                  <NoteComp
+                    item={item}
+                    index={index}
+                    handleDelete={() => handleDelete(index)}
+                  />
+                </TouchableOpacity>
+              );
+            })
+          )}
+        </ScrollView>
+      </View>
 
-      <TouchableOpacity
-        style={styles.calendar}
-        onPress={() => navigation.navigate('ShowOnCalendar')}>
-        <Ionicons name="calendar" size={27} color={'white'} />
-      </TouchableOpacity>
+      <AddButton />
     </SafeAreaView>
   );
 };

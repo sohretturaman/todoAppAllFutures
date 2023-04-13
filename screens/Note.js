@@ -20,7 +20,7 @@ import AddButton from '../components/AddButton';
 const Note = ({navigation, ...props}) => {
   const [searchNote, setSearchNote] = useState('');
   const [searchedArray, setSearchedArray] = useState([]);
-  console.log('my notes', props.notes);
+
 
   const handleDelete = index => {
     let newNotes = [...props.notes];
@@ -156,7 +156,7 @@ const Note = ({navigation, ...props}) => {
         </ScrollView>
       </View>
 
-      <AddButton />
+      <AddButton onPress={()=>navigation.navigate('AddNote')} />
     </SafeAreaView>
   );
 };

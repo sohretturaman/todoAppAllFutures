@@ -14,11 +14,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Tasks from './screens/Tasks';
 import Translator from './screens/Translator';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Image} from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HeaderComp from './components/HeaderComp';
 import { Dimensions } from 'react-native';
 import Settings from './screens/Settings';
+import HeaderTask from './components/HeaderTask';
 
 const TabStack = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -74,7 +74,6 @@ const App = () => {
     return (
       <TabStack.Navigator
         screenOptions={{
-          header: () => <HeaderComp />,
           tabBarStyle:{
             backgroundColor:'white',
             borderTopColor:'#454545',
@@ -84,7 +83,7 @@ const App = () => {
             elevation:0.02,
             shadowOffset:{height:5,width:1}
           },
-          
+          tabBarShowLabel:false
         }}
         >
         <TabStack.Screen
@@ -94,24 +93,23 @@ const App = () => {
             tabBarIcon: ({focused}) => (
               <Icon
                 name="note-text-outline"
-                size={30}
+                size={35}
                 color={focused ? '#7E0CF5' : '#454545'}
               />
             ),
-             
-            tabBarShowLabel:false
+            header: () => <HeaderComp/>,        
+          
           }}
         />
         <TabStack.Screen
           name="Task"
           component={Tasks}
           options={{
-            tabBarIcon: () => (
-              <Image
-                source={require('./assets/checklist.png')}
-                style={{height: 30, width: 30}}
-              />
+            tabBarIcon: ({focused}) => (
+             <FontAwesome name='tasks' size={30}  color={focused ? '#7E0CF5' : '#454545'}/>
             ),
+            header: () => <HeaderTask/>,  
+           
           }}
         />
         <TabStack.Screen
@@ -121,7 +119,7 @@ const App = () => {
             tabBarIcon: ({focused}) => (
               <Icon
                 name="translate"
-                size={30}
+                size={33}
                 color={focused ? '#7E0CF5' : '#454545'}
               />
             ),
@@ -177,6 +175,7 @@ const App = () => {
         <Stack.Screen name="ShowOnCalendar" component={CalendarComp} />
         <Stack.Screen name="EditNote" component={EditNoteComp} />
         <Stack.Screen name='Settings' component={Settings}/>
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

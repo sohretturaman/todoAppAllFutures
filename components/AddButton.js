@@ -4,15 +4,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dimensions} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-const AddButton = () => {
-  const navigation = useNavigation();
+const AddButton = ({onPress}) => {
+
   return (
     <View style={styles.iconContainer}>
       <TouchableOpacity
         style={styles.iconWrapper}
-        onPress={() => {
-          navigation.navigate('AddNote');
-        }}>
+        onPress={onPress}>
         <Icon name="plus" size={30} color={'white'} />
       </TouchableOpacity>
     </View>

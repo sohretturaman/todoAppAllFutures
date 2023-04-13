@@ -5,12 +5,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
 
-const HeaderComp = ({title}) => {
+const HeaderTask = () => {
     const navigation =useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Handy Notes...</Text>
+        <Text style={styles.title}>What to do today ? </Text>
       </View>
       <View style={{flexDirection: 'row'}}>
         <Icon name="calendar-month-outline" size={30} color={'white'}  onPress={()=>navigation.navigate('ShowOnCalendar')}/>
@@ -20,7 +20,7 @@ const HeaderComp = ({title}) => {
   );
 };
 
-export default HeaderComp;
+export default HeaderTask;
 
 const styles = StyleSheet.create({
   container: {

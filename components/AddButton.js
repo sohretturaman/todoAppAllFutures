@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity,TextInput} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dimensions} from 'react-native';
@@ -11,7 +11,12 @@ const AddButton = ({onPress}) => {
       <TouchableOpacity
         style={styles.iconWrapper}
         onPress={onPress}>
+           <TextInput 
+        placeholder=""
+       // onSubmitEditing={Keyboard.dismiss}
+      />
         <Icon name="plus" size={30} color={'white'} />
+       
       </TouchableOpacity>
     </View>
   );

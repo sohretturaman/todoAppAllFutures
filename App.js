@@ -19,6 +19,7 @@ import HeaderComp from './components/HeaderComp';
 import { Dimensions } from 'react-native';
 import Settings from './screens/Settings';
 import HeaderTask from './components/HeaderTask';
+import AddTask from './screens/AddTask';
 
 const TabStack = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -83,7 +84,8 @@ const App = () => {
             elevation:0.02,
             shadowOffset:{height:5,width:1}
           },
-          tabBarShowLabel:false
+          tabBarShowLabel:false,
+          tabBarHideOnKeyboard: true
         }}
         >
         <TabStack.Screen
@@ -125,6 +127,7 @@ const App = () => {
             ),
           }}
         />
+      
       </TabStack.Navigator>
     );
   };
@@ -175,6 +178,7 @@ const App = () => {
         <Stack.Screen name="ShowOnCalendar" component={CalendarComp} />
         <Stack.Screen name="EditNote" component={EditNoteComp} />
         <Stack.Screen name='Settings' component={Settings}/>
+        <Stack.Screen name='AddTask' component={AddTask} />
        
       </Stack.Navigator>
     </NavigationContainer>

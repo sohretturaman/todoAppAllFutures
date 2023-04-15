@@ -6,10 +6,9 @@ import Moment from 'moment'
 
 
 //in this code block especially touchablewithoutfeedback is important for customer usage
-const AddNote = ({navigation, ...props }) => {
+const AddTask = ({navigation, ...props }) => {
   
-  const [title,setTitle]=useState('');
-  const [disc,setDisc]=useState('');
+  const [task,setTask] =useState('');
 
   handleButton=()=>{
     Moment.locale('EN'); 
@@ -25,27 +24,29 @@ const AddNote = ({navigation, ...props }) => {
  
 
   }
+  const CreateBox=()=>{
+    Keyboard.dismiss()
+     console.log('create boxpressed');
+     
+  }
   return (
-    <View>
+    <View style={{height:'20%'}}>
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
           <View style={{ justifyContent: 'space-between' }}> 
             <View style={styles.input}>
-            <TextInput style={{fontSize:20,borderBottomColor:'grey',borderBottomWidth:0.2,paddingBottom:5,}} placeholder='title' placeholderTextColor={'grey'}
-              multiline={false}
-              maxLength={40}
-              value={title}
-              onChangeText={(value) => setTitle(value)}
-            />
-            <TextInput style={{fontSize: 20,  height: 250,textAlignVertical:'top'}} placeholder='write a note ...' placeholderTextColor={'grey'}
+            <TextInput style={{fontSize: 20,  height: 250,textAlignVertical:'top'}} placeholder='write a  task ...'
+             placeholderTextColor={'grey'}
               multiline={true}
-              value={disc}
-              onChangeText={(value) => setDisc(value)}
+              value={task}
+              onChangeText={(value) => setTask(value)}
+              onSubmitEditing={()=>CreateBox()}
+              allowFontScaling={false}
             />
             </View>
 
            
-            <TouchableOpacity style={styles.buttonWrapper} onPress={()=>{handleButton()}}>
+            <TouchableOpacity style={styles.buttonWrapper} onPress={()=>{CreateBox()}}>
               <Text style={styles.text}>Add</Text>
             </TouchableOpacity>
           </View>
@@ -56,7 +57,7 @@ const AddNote = ({navigation, ...props }) => {
   )
 }
 
-export default AddNote
+export default AddTask;
 
 const styles = StyleSheet.create({
   input: {

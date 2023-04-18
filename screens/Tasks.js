@@ -1,3 +1,4 @@
+//main color #7E0CF5
 import {
   StyleSheet,
   Text,
@@ -10,7 +11,7 @@ import {
   Keyboard,
   Dimensions,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -18,11 +19,14 @@ import AddButton from '../components/AddButton';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {useNavigation} from '@react-navigation/native';
 import SearchComp from '../components/SearchComp';
+import AddTaskComp from '../components/AddTaskComp';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const initialValues = [
   {
     id: 1,
-    task: 'first task',
+    task: 'first task first task first taskfirst taskfirst taskfirst task first taskfirst task first task first task first taskfirst taskfirst taskfirst task first taskfirst task ',
   },
   {
     id: 2,
@@ -34,35 +38,35 @@ const initialValues = [
   },
   {
     id: 4,
-    task: 'third task',
+    task: 'fourth task',
   },
   {
     id: 5,
-    task: 'third task',
+    task: 'fifth task',
   },
   {
     id: 6,
-    task: 'third task',
+    task: 'sixth task',
   },
   {
     id: 7,
-    task: 'third task',
+    task: 'seventh task',
   },
   {
     id: 8,
-    task: 'third task',
+    task: 'eight task',
   },
   {
     id: 9,
-    task: 'nine task',
+    task: 'nineth task',
   },
   {
     id: 10,
-    task: 'ten task',
+    task: 'tenth task',
   },
   {
     id: 11,
-    task: 'eleven task',
+    task: 'eleventh task',
   },
   {
     id: 12,
@@ -77,31 +81,27 @@ const initialValues = [
 const Tasks = () => {
   const navigation = useNavigation();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+   const [task,setTask] =useState(''); 
 
-  
-   useEffect(() => {
-      const keyboardDidShowListener = Keyboard.addListener(
-          'keyboardDidShow',
-          () => {
-              setKeyboardVisible(true);
-          },
-      );
-      const keyboardDidHideListener = Keyboard.addListener(
-          'keyboardDidHide',
-          () => {
-              setKeyboardVisible(false);
-          },
-      );
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
 
-      return () => {
-          keyboardDidHideListener.remove();
-          keyboardDidShowListener.remove();
-      };
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
   }, []);
- 
- 
-
-
 
   const handleDelete = (rowMap, rowKey) => {
     const newArray = [...tasklist];
@@ -118,22 +118,33 @@ const Tasks = () => {
   );
 
   const onRowDidOpen = rowKey => {
+    //Iam  gonna add animated api to delete item
     console.log('on row did open presed ', rowKey);
-    handleDelete(rowKey);
+    const newArray = [...tasklist];
+    const SwippedItem = newArray.findIndex(item => item.key === rowKey);
+    console.log('on did opend this item deleted ', SwippedItem);
+    newArray.splice(SwippedItem, 1);
+    setTaskList(newArray);
+  };
+
+  const handleStrikeOut = index => {  // later after adding task 
+    //change squential
+    const array = [tasklist];
+    const strikedItem = array.filter(item => item.id == index);
+    console.log('my pressed ite ', strikedItem);
+    setStrikedList(...strikedList, strikedItem);
   };
 
   const renderItem = (data, rowMap) => {
     return (
-      <TouchableHighlight>
-        <View
-          style={{
-            borderColor: 'black',
-            borderWidth: 2,
-            padding: 20,
-            margin: 5,
-            backgroundColor: 'white',
-          }}>
-          <Text> task is = {data.item.task}</Text>
+      <TouchableHighlight style={styles.renderItemContainer}>
+        <View style={styles.renderItemWrapper}>
+          <Text numberOfLines={3} style={styles.taskText}>
+            {data.item.task}
+          </Text>
+          <TouchableOpacity
+            style={styles.boxWrapper}
+            onPress={() => handleStrikeOut(data.item.id)}></TouchableOpacity>
         </View>
       </TouchableHighlight>
     );
@@ -142,17 +153,9 @@ const Tasks = () => {
   const HiddenItemAction = ({handleDelete}) => {
     return (
       <TouchableHighlight onPress={handleDelete}>
-        <View
-          style={{
-            backgroundColor: 'red',
-            margin: 5,
-            padding: 5,
-            alignContent: 'flex-end',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-          }}>
+        <View style={styles.hideItemContainer}>
           <Text>{''}</Text>
-          <Text>Delete</Text>
+          <Icon name="delete" size={25} color={'white'} />
         </View>
       </TouchableHighlight>
     );
@@ -168,44 +171,51 @@ const Tasks = () => {
     );
   };
 
+  onPressBack = () => {
+    setKeyboardVisible(false);
+  };
 
 
-
+  const HandleTask =()=>{
+    console.log('handleTask pressed  my items area that ' ,task)
+    setKeyboardVisible(false)
+  }
   return (
-    <SafeAreaView style={{backgroundColor: '#F6F5F5', paddingBottom: 90}}>
-      <View>
+    <SafeAreaView style={styles.mainContainer}>
+      <View style={styles.searchWrapper}>
         <SearchComp />
       </View>
 
-      {/**invisible textinput  */}
-{isKeyboardVisible?(
-  <View style={{position:'absolute',zIndex:2,marginTop:50,backgroundColor:'red',width:'100%'}}>
-  <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View>
-              <TextInput
-                style={{fontSize: 20, height: 250, textAlignVertical: 'top'}}
-                placeholder="write a  task ..."
-                placeholderTextColor={'grey'}
-                multiline={true}
-                onSubmitEditing={()=>setKeyboardVisible(false)}
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-  </View>
-):
+      {/**invisible textinput ADD TASK !!!  */}
+      {isKeyboardVisible ? (
+        <View
+          style={styles.invisibleAddTask}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={styles.innerContainer}>
+                {/**add task icon wrapper */}
+                <TouchableOpacity style={styles.doneWrapper} onPress={()=>HandleTask()}>
+                    <Text style={{color:'#7E0CF5',fontSize:20}}> Done </Text>
+                </TouchableOpacity>
+                <TextInput
+                  style={{fontSize:18, height: 250, textAlignVertical: 'top'}}
+                  placeholder="write a  task ..."
+                  placeholderTextColor={'grey'}
+                  multiline={true}
+                  autoFocus={true}
+                  value={task}
+                  onChangeText={(value)=>setTask(value)}
+                 // onSubmitEditing={() => setKeyboardVisible(false)}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
+        </View>
+      ) : null}
 
-(
-  <Text>o gitti ben geldim </Text>
-)}
-
-    
-
-      <View>
+      <View style={{paddingBottom: 2, height: '90%', paddingHorizontal: 20}}>
         <SwipeListView
-          style={{backgroundColor: 'green', paddingBottom: 30}}
           data={tasklist}
           renderItem={renderItem}
           renderHiddenItem={renderHiddenItem}
@@ -216,17 +226,92 @@ const Tasks = () => {
         />
       </View>
 
-      <AddButton onPress={() => {}} />
+      <AddTaskComp
+        onPress={() => {
+          setKeyboardVisible(true);
+        }}
+      />
     </SafeAreaView>
   );
 };
 
+// as striked as a  property okay 
+
 export default Tasks;
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    backgroundColor: '#F6F5F5',
     height: '100%',
+    flex:1
   },
+  searchWrapper: {
+    paddingTop: 15,
+    paddingBottom: 5,
+  },
+
+  renderItemContainer: {
+    borderColor: 'white',
+    borderWidth: 1,
+    padding: 2,
+    margin: 5,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    maxHeight: 200,
+  },
+  renderItemWrapper: {
+    flexDirection: 'row',
+    padding: 18,
+    justifyContent: 'space-between',
+  },
+  boxWrapper: {
+    borderRadius: 6,
+    borderColor: '#454545',
+    borderWidth: 2,
+    width: 20,
+    height: 20,
+    backgroundColor: '#7E0CF5',
+    opacity: 0.9,
+  },
+  taskText: {
+    fontSize: 17,
+    color: 'black',
+    width: '90%',
+  },
+
+  strikedOutText: {
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
+  },
+
+  hideItemContainer: {
+    backgroundColor: 'red',
+    padding: 15,
+    margin: 5,
+    borderRadius: 20,
+    alignContent: 'flex-end',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  invisibleAddTask :{
+    position: 'absolute',
+    zIndex: 1,
+    backgroundColor: 'white',
+    width: '100%',
+    bottom:0,
+    minHeight:100,
+    maxHeight:200,
+    borderTopLeftRadius:20,
+    borderTopRightRadius:20,
+    borderColor:'#454545',
+    borderWidth:0.5,
+    borderBottomWidth:0
+    
+  },
+  innerContainer:{
+    padding:5,
+  },
+  doneWrapper:{alignSelf:'flex-end',marginRight:10}
 });
 
 {

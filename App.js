@@ -85,7 +85,8 @@ const App = () => {
             shadowOffset:{height:5,width:1}
           },
           tabBarShowLabel:false,
-          tabBarHideOnKeyboard: true
+          tabBarHideOnKeyboard: true,
+          tabBarStyle: { position: 'relative' },
         }}
         >
         <TabStack.Screen

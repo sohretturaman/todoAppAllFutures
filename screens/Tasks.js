@@ -186,7 +186,8 @@ const Tasks = () => {
         <SearchComp />
       </View>
 
-      {/**invisible textinput ADD TASK !!!  */}
+
+      {/**invisible textinput ADD TASK !!! styles configured to keyboard   */}
       {isKeyboardVisible ? (
         <View
           style={styles.invisibleAddTask}>
@@ -213,6 +214,11 @@ const Tasks = () => {
           </KeyboardAvoidingView>
         </View>
       ) : null}
+
+
+
+
+    
 
       <View style={{paddingBottom: 2, height: '90%', paddingHorizontal: 20}}>
         <SwipeListView

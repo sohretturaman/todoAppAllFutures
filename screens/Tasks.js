@@ -23,6 +23,9 @@ import AddTaskComp from '../components/AddTaskComp';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
+import {useTheme} from "react-native-paper";
+
+
 const initialValues = [
   {
     id: 1,
@@ -79,6 +82,7 @@ const initialValues = [
 ];
 
 const Tasks = () => {
+  const theme = useTheme();
   const navigation = useNavigation();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
    const [task,setTask] =useState(''); 
@@ -181,13 +185,13 @@ const Tasks = () => {
     setKeyboardVisible(false)
   }
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <SafeAreaView style={[styles.mainContainer,{backgroundColor:theme.colors.backdrop}]}>
       <View style={styles.searchWrapper}>
         <SearchComp />
       </View>
 
 
-      {/**invisible textinput ADD TASK !!! styles configured to keyboard   */}
+      {/**invisible textinput ADD TASK !!! styles configured to keyboard    */}
       {isKeyboardVisible ? (
         <View
           style={styles.invisibleAddTask}>
@@ -196,7 +200,7 @@ const Tasks = () => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={styles.innerContainer}>
                 {/**add task icon wrapper */}
-                <TouchableOpacity style={styles.doneWrapper} onPress={()=>HandleTask()}>
+                <TouchableOpacity style={{backgroundColor:theme.colors.background}} onPress={()=>HandleTask()}> !!!!!
                     <Text style={{color:'#7E0CF5',fontSize:20}}> Done </Text>
                 </TouchableOpacity>
                 <TextInput

@@ -7,6 +7,7 @@ import {
   ScrollView,
   SafeAreaView,
   Dimensions,
+  FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -16,48 +17,32 @@ import AutocompleteInput from 'react-native-autocomplete-input';
 import NoteComp from '../components/NoteComp';
 import SearchComp from '../components/SearchComp';
 import AddButton from '../components/AddButton';
+import { useTheme } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import {  AddNoteToTrash, RemoveNoteItem } from '../components/redux/action/Actions';
+
 
 const Note = ({navigation, ...props}) => {
   const [searchNote, setSearchNote] = useState('');
   const [searchedArray, setSearchedArray] = useState([]);
+  const theme = useTheme(); 
+  const dispatch = useDispatch(); 
 
 
-  const handleDelete = index => {
+  const handleDelete = index => { //!!!!!! 
     let newNotes = [...props.notes];
     let deletedItem = newNotes.splice(index, 1);
-    let newTrash = [...deletedItem, ...props.moveToTrash];
-    //props.setMoveToTrash(newTrash)
-    //props.setNotes(newNotes);
+
+    console.log('my trash item before adding dispath',deletedItem);
+    
+    dispatch(AddNoteToTrash(deletedItem));  // add  trash save trash 
 
     AsyncStorage.setItem('saveNotes', JSON.stringify(newNotes)).then(() => {
       props.setNotes(newNotes);
     });
-    AsyncStorage.setItem('saveTrash', JSON.stringify(newTrash))
-      .then(() => {
-        props.setMoveToTrash(newTrash);
-      })
-      .catch(err => console.log(err));
+   
   };
 
-  function clearAll() {
-    let emptyNotes = [...props.notes];
-    let newTrash = [...props.moveToTrash];
-    emptyNotes.forEach((item, index) => {
-      newTrash.push(item);
-    });
-    // props.setNotes([]);
-    //props.setMoveToTrash(newTrash);
-
-    AsyncStorage.setItem('saveNotes', JSON.stringify([])).then(() => {
-      props.setNotes([]);
-    });
-
-    AsyncStorage.setItem('saveTrash', JSON.stringify(newTrash))
-      .then(() => {
-        props.setMoveToTrash(newTrash);
-      })
-      .catch(err => console.log(err));
-  }
 
   const handleSearch = value => {
     setSearchNote(value);
@@ -86,43 +71,20 @@ const Note = ({navigation, ...props}) => {
       console.log('array saved');
       // props.setNotes([searchedArray]); // you have to  give with [...arraysearched it gives error]
     }
-  };
+  }; 
 
-  const handleEdit = (item, index) => {
-    console.log('handle note çalıştı');
-
+  function handleEdit (item, index) {
+    console.log('handle note çalisti');
     navigation.navigate('EditNote', {
       index: index,
       item: item,
     });
   };
-  return (
-    <SafeAreaView style={styles.mainContainer}>
-      {/*  header buttons   
-      <View style={styles.headerWrapper}>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Your Notes...</Text>
-          <Text style={styles.total}>Total :{props.notes.length} </Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity
-            style={styles.iconWrapper}
-            onPress={() => {
-              navigation.navigate('DeletedNote');
-            }}>
-            <Icon name="delete" size={25} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.iconWrapper}
-            onPress={() => {
-              navigation.navigate('AddNote');
-            }}>
-            <Icon name="plus" size={28} color={'white'} />
-          </TouchableOpacity>
-        </View>
-      </View> 
-     */}
 
+  
+  return (
+    <SafeAreaView style={[styles.mainContainer,{backgroundColor:theme.colors.backdrop}]}>
+    
       <View style={styles.bodyWrapper}>
         <ScrollView>
           <SearchComp handleSearch={handleSearch} searchNote={searchNote} />
@@ -154,6 +116,7 @@ const Note = ({navigation, ...props}) => {
             })
           )}
         </ScrollView>
+      
       </View>
 
       <AddButton onPress={()=>navigation.navigate('AddNote')} />
@@ -169,6 +132,31 @@ export default Note;
     props.setNotes(filteredData);
 */
 }
+  {/*  header buttons   
+      <View style={styles.headerWrapper}>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>Your Notes...</Text>
+          <Text style={styles.total}>Total :{props.notes.length} </Text>
+        </View>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity
+            style={styles.iconWrapper}
+            onPress={() => {
+              navigation.navigate('DeletedNote');
+            }}>
+            <Icon name="delete" size={25} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconWrapper}
+            onPress={() => {
+              navigation.navigate('AddNote');
+            }}>
+            <Icon name="plus" size={28} color={'white'} />
+          </TouchableOpacity>
+        </View>
+      </View> 
+     */}
+
 //here the deleted item is an array (handle delete func)
 // that's why you have to configure it as an array if you use as [deletedItem,...props.moveToTrash]
 //it will convert  your moveToTrash array to 2D array

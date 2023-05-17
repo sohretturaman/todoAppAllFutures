@@ -57,7 +57,8 @@ const EditNote = ({route, navigation, ...props}) => {
                 value={editTitle ? editTitle :''}
                 onChangeText={value => setEditTitle(value)}
               />
-              {/* note disc text input */}
+           
+           
               <TextInput
                 style={{fontSize: 20, height: 250, textAlignVertical: 'top'}}
                 placeholder="write a note ..."

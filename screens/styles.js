@@ -3,6 +3,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
    mainContainer:{
     backgroundColor: '#F6F5F5',
+    height:'100%'
    },
   bodyWrapper:{
     alignContent: 'center',

@@ -1,46 +1,46 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView,Alert } from 'react-native'
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-
+import { useDispatch, useSelector } from 'react-redux'
+import { RemoveNoteFromTrash } from '../components/redux/action/Actions'
 
 
 
 const DeletedNote = ({navigation, ...props }) => {
+const dataFromRedux =useSelector((selector) =>selector);
+const dispatch =useDispatch(); 
 
- console.log('in deleted screen',props.moveToTrash)
+console.log('from redux data delete screen',dataFromRedux[0]?.disc);
 
  
-  const deleteTrash = () => { 
+  const deleteTrash = () => {  //!!!! do that with multi selection 
     let deletedNotes = [...props.moveToTrash]
     deletedNotes = [];
     props.setMoveToTrash([]);
-
+/*
     AsyncStorage.setItem('saveTrash',JSON.stringify(deletedNotes)).then(()=>{
       props.setMoveToTrash(deletedNotes);
     }).catch((err)=>console.log(err))
-
+*/
   }
 
   const undoNote = (index) => {
-    let newArray = [...props.moveToTrash];
+    let newArray = [...dataFromRedux];
     let undoNote = newArray.splice(index, 1);
-   // props.setMoveToTrash(newArray);
-    let newNotes = [...undoNote, ...props.notes]
-   // props.setNotes(newNotes);
 
+    let newNotes = [...undoNote, ...props.notes]
+     
+    dispatch(RemoveNoteFromTrash(index)); //delete item from trash story in redux
+  
     AsyncStorage.setItem('saveNotes',JSON.stringify(newNotes)).then(()=>{
       props.setNotes(newNotes)
     }).catch((err)=>console.log(err))
 
-    AsyncStorage.setItem('saveTrash',JSON.stringify(newArray)).then(()=>{
-      props.setMoveToTrash(newArray)
-    }).catch((err)=>console.log(err))
+ 
    
   }
 
   function undoAll() {
-    //check here !!!
     Alert.alert('Undo All Notes', 'are you sure to make all the notes undo',[{
       text: 'no',
       onPress: () => console.log('no it pressed '),
@@ -48,18 +48,18 @@ const DeletedNote = ({navigation, ...props }) => {
     }, {
       text: 'yes',
       onPress: () => {
-        let newTrashArray = [...props.moveToTrash];
+        let newTrashArray = [...dataFromRedux];
         let undoNotes = [...props.notes];
         newTrashArray.forEach((item, index) => {
           undoNotes.push(item)
         })
 
-          //props.setMoveToTrash([]);
-         // props.setNotes(undoNotes);
+        
+         /* instead of that I used  react-redux to  save deleted notes
           AsyncStorage.setItem('saveTrash',JSON.stringify([])).then(()=>{
             props.setMoveToTrash([]);
           }).catch((err)=>console.log(err))
-         
+         */
           AsyncStorage.setItem('saveNotes',JSON.stringify(undoNotes)).then(()=>{
             props.setNotes(undoNotes);
           }).catch((err)=>console.log(err))
@@ -75,15 +75,9 @@ const DeletedNote = ({navigation, ...props }) => {
   }
 
   function deletePermenant(index) {
-    let newArray = [...props.moveToTrash];
-    let deletedItem = newArray.splice(index, 1); 
-   // props.setMoveToTrash(newArray);
-
-    AsyncStorage.setItem('saveTrash',JSON.stringify(newArray)).then(()=>{
-      props.setMoveToTrash(newArray)
-    }).catch((err)=>console.log(err))
-
-    console.log(deletedItem, 'been deleted successfully') 
+  const respond =  dispatch(RemoveNoteFromTrash(index))
+   console.log('here is my respoond from dispatch',respond);
+  
   }
  
 
@@ -94,7 +88,7 @@ const DeletedNote = ({navigation, ...props }) => {
         <TouchableOpacity style={styles.buttonWrapper} onPress={undoAll}>
           <Text style={styles.title}>Undo All</Text>
         </TouchableOpacity>
-        <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Total:{props.moveToTrash.length}  </Text>
+        <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Total:{dataFromRedux.length}  </Text>
         <TouchableOpacity style={styles.buttonWrapper} onPress={deleteTrash}>
           <Text style={styles.title}>Empty</Text>
         </TouchableOpacity>
@@ -103,7 +97,7 @@ const DeletedNote = ({navigation, ...props }) => {
        {/**body comp  */}
       <ScrollView style={{ marginTop: 10 }}>
         <View>
-          {props.moveToTrash.map((item, index) =>
+          {dataFromRedux.map((item, index) =>
             <View key={index} style={{ justifyContent: 'center', alignItems: 'center', }}>
               <View style={styles.noteContainer}>
                 <View style={styles.notePartWrapper} >

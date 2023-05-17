@@ -13,7 +13,7 @@ const HeaderComp = ({title}) => {
         <Text style={styles.title}>Handy Notes...</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
-        <Icon name="calendar-month-outline" size={30} color={'white'}  onPress={()=>navigation.navigate('ShowOnCalendar')}/>
+        <Icon name="trash-can-outline" size={30} color={'white'}  onPress={()=>{navigation.navigate('DeletedNote')}}/>
         <Icon name="dots-vertical" size={30} color={'white'} onPress={()=>navigation.navigate('Settings')} />
       </View>
     </View>

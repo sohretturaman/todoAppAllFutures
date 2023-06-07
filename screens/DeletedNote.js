@@ -7,7 +7,7 @@ import { RemoveNoteFromTrash } from '../components/redux/action/Actions'
 
 
 const DeletedNote = ({navigation, ...props }) => {
-const dataFromRedux =useSelector((selector) =>selector);
+const dataFromRedux =useSelector((selector) =>selector.store);
 const dispatch =useDispatch(); 
 
 console.log('from redux data delete screen',dataFromRedux[0]?.disc);

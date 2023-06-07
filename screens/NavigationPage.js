@@ -7,27 +7,26 @@ import {
   DefaultTheme,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Note from './screens/Note';
-import AddNote from './screens/AddNote';
-import DeleteNote from './screens/DeletedNote';
-import EditNote from './screens/EditNote';
-import ShowOnCalendar from './screens/ShowOnCalendar';
+import Note from './Note';
+import AddNote from './AddNote';
+import DeleteNote from './DeletedNote';
+import EditNote from './EditNote';
+import ShowOnCalendar from './ShowOnCalendar';
 import Moment from 'moment';
 import {format} from 'date-fns';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Tasks from './screens/Tasks';
-import Translator from './screens/Translator';
+import Tasks from './Tasks';
+import Translator from './Translator';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import HeaderComp from './components/HeaderComp';
+import HeaderComp from '../components/HeaderComp';
 import {Dimensions} from 'react-native';
-import Settings from './screens/Settings';
-import HeaderTask from './components/HeaderTask';
-import AddTask from './screens/AddTask';
-import {Provider} from 'react-redux';
-import {Store} from './components/redux/store/Store';
-import DeletedNote from './screens/DeletedNote';
+import Settings from './Settings';
+import HeaderTask from '../components/HeaderTask';
+import AddTask from './AddTask';
+import {customDarkTheme,customDefaultTheme} from '../components/Themes';
+import { useSelector } from 'react-redux';
 
 const TabStack = createBottomTabNavigator();
 const Stack2 = createStackNavigator();
@@ -186,9 +185,12 @@ const NavigationPage = () => {
 
   const SettingScreenComp = props => <Settings {...props} />;
 
+
+  let currentTheme = useSelector(selector =>selector.changeTheme)
+  
   return (
   
-      <NavigationContainer theme={DefaultTheme}>
+      <NavigationContainer theme={currentTheme ? customDarkTheme:customDefaultTheme}>
         <Stack2.Navigator>
           <Stack2.Screen
             name="Bottom"

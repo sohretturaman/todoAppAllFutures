@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView,  Dimensions,} from 'react-native';
 import {styles} from '../screens/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from 'react-native-paper';
+import {useTheme} from '@react-navigation/native'
 
 const NoteComp = ({item,index,handleDelete}) => {
   const theme = useTheme() ; 
@@ -12,7 +12,7 @@ const NoteComp = ({item,index,handleDelete}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <View style={[styles.noteContainer,{backgroundColor:theme.colors.primary}]}>
+      <View style={[styles.noteContainer,{backgroundColor:theme.colors.primary_darkPurple}]}>
         <View style={styles.notePartWrapper}>
           {item.title ? (
             <Text

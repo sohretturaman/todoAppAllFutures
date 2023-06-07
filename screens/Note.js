@@ -16,10 +16,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AutocompleteInput from 'react-native-autocomplete-input';
 import NoteComp from '../components/NoteComp';
 import SearchComp from '../components/SearchComp';
-import AddButton from '../components/AddButton';
-import { useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import {  AddNoteToTrash, RemoveNoteItem } from '../components/redux/action/Actions';
+import {useTheme} from '@react-navigation/native'
+import AddButton from '../components/AddButton'
 
 
 const Note = ({navigation, ...props}) => {
@@ -125,6 +125,7 @@ const Note = ({navigation, ...props}) => {
 };
 
 export default Note;
+
 
 {
   /**if you use filter function in handle delete

@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -159,6 +160,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
     //vector
     implementation project(':react-native-vector-icons')
+    implementation platform('com.google.firebase:firebase-bom:32.1.0') //firebase 
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 

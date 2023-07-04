@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Switch} from 'react-native';
+import {StyleSheet, Text, View, Switch,Button} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,6 +31,7 @@ const Settings = ({navigation, ...props}) => {
       <Text style={{color: theme.colors.text, marginTop: 16}}>
         Use Dark Theme
       </Text>
+      <Button title='got to login' onPress={()=>navigation.navigate('Login')} />
     </View>
   );
 };

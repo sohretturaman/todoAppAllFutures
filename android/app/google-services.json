@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "779024671033",
+    "project_id": "focused-f9ebd",
+    "storage_bucket": "focused-f9ebd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779024671033:android:edd48799deef6240fe08e8",
+        "android_client_info": {
+          "package_name": "com.todo_all"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779024671033-f32drquj0uk6v11omi42bblhf14tblu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7_LfYBt7RXmYTBcS3rsWmCROSE0mgyZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779024671033-f32drquj0uk6v11omi42bblhf14tblu6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

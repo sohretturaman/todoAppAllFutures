@@ -27,9 +27,13 @@ import HeaderTask from '../components/HeaderTask';
 import AddTask from './AddTask';
 import {customDarkTheme,customDefaultTheme} from '../components/Themes';
 import { useSelector } from 'react-redux';
+import Login from './auth/Login';
+import Signup from './auth/Signup';
+
 
 const TabStack = createBottomTabNavigator();
 const Stack2 = createStackNavigator();
+const Stack = createStackNavigator();
 
 const NavigationPage = () => {
   const [notes, setNotes] = useState([]);
@@ -153,6 +157,14 @@ const NavigationPage = () => {
     );
   };
 
+  const AuthStack =()=>{
+    return (
+     <Stack.Navigator screenOptions={{headerShown:false}}>
+       <Stack.Screen name='Login' component={Login} />
+       <Stack.Screen name='Signup' component={Signup} />
+     </Stack.Navigator>
+    )
+  }
   const CalendarComp = props => (
     <ShowOnCalendar {...props} setNotes={setNotes} notes={notes} />
   ); 
@@ -186,13 +198,15 @@ const NavigationPage = () => {
   const SettingScreenComp = props => <Settings {...props} />;
 
 
+
   let currentTheme = useSelector(selector =>selector.changeTheme)
   
   return (
   
       <NavigationContainer theme={currentTheme ? customDarkTheme:customDefaultTheme}>
         <Stack2.Navigator>
-          <Stack2.Screen
+         <Stack2.Screen name='Auth' component={AuthStack}       options={{headerShown: false}} />
+          <Stack2.Screen 
             name="Bottom"
             component={BottomStack}
             options={{headerShown: false}}
@@ -202,6 +216,7 @@ const NavigationPage = () => {
           <Stack2.Screen name="EditNote" component={EditNoteComp} />
           <Stack2.Screen name="Settings" component={SettingScreenComp} />
           <Stack2.Screen name="AddTask" component={AddTask} />
+        
         </Stack2.Navigator>
       </NavigationContainer>
  

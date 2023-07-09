@@ -20,11 +20,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  AddNoteToTrash, RemoveNoteItem } from '../components/redux/action/Actions';
 import {useTheme} from '@react-navigation/native'
 import AddButton from '../components/AddButton'
+import { firebase } from '@react-native-firebase/auth';
 
 
 const Note = ({navigation, ...props}) => {
   const [searchNote, setSearchNote] = useState('');
   const [searchedArray, setSearchedArray] = useState([]);
+  const [user,setUser]=useState('');
   const theme = useTheme(); 
   const dispatch = useDispatch(); 
 
@@ -82,6 +84,13 @@ const Note = ({navigation, ...props}) => {
   };
 
   
+  
+  useEffect(()=>{
+    firebase.auth().onAuthStateChanged((userData)=>{
+      setUser(userData?.email??'');
+       })
+  },[])
+
   return (
     <SafeAreaView style={[styles.mainContainer,{backgroundColor:theme.colors.backdrop}]}>
     
@@ -118,6 +127,7 @@ const Note = ({navigation, ...props}) => {
         </ScrollView>
       
       </View>
+      <Text>you are welcome {user}</Text>
 
       <AddButton onPress={()=>navigation.navigate('AddNote')} />
     </SafeAreaView>

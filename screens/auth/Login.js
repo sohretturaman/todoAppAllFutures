@@ -6,8 +6,9 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import Input from '../../components/authComp/Input';
@@ -20,49 +21,47 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const navigation = useNavigation();
-  const [logged, setLogged] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+ // const [loggedIn, setLoggedIn] = useState(false);
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
-  const [showLoading,setShowLoading]=useState(false); 
-console.log('my current user is',user.email,user.emailVerified);
+  const [user, setUser] = useState({});
+  const [loading,setLoading]=useState(false); 
 
+   const current = auth().currentUser  
+  console.log('my current user is',user?.email ,'second way',current?.email);
 
   const handleLogin = async(values) => {
-    //const current = auth().currentUser
-   // console.log('curretn user',current);   
-    setShowLoading(true);
+    setLoading(true);
     try {
-       const login=  await auth().signInWithEmailAndPassword(values.email, values.password);
-        setShowLoading(false);
-        if(login.user) {
-            navigation.navigate('Bottom');
-            AsyncStorage.setItem('user',JSON.stringify(login))
-            .then(()=>setUser(login.user))
+       const login=  await auth().signInWithEmailAndPassword(values?.email, values?.password);
+        setLoading(true);
+        console.log('my value to set user',login.user);
+         if(login.user) {
+            AsyncStorage.setItem('user',JSON.stringify(login.user))
+            .then(()=>
+            {setUser(login.user) 
+              })
             .catch((err)=>console.log('error',err))
+
+            navigation.navigate('Root' , { screen: 'Bottom' });
         
-          }else{setUser(null)}
+          }
     } catch (e) {
-        setShowLoading(false);
+        setLoading(false);
         console.log('hata var',e);
    
         }
-
-        //second
-        try {
-          const  getUser =  await AsyncStorage.getItem('user')
-          console.log('json value',getUser != null ? JSON.parse(getUser) : null);
-        } catch (e) {
-          console.log('errroror',e);
           
-        }
-      
-        
-
-    //redux value == current user login
-//const user = auth().currentUser;  
+    setLoading(false); 
   };
 
+  if(loading){
+    return(
+      <View>
+        <ActivityIndicator size={60} color={'Red'}/>
+      </View>
+    )
+  }
+ 
   return (
     <KeyboardAvoidingView style={{height: '100%'}}>
       <SafeAreaView style={styles.container}>
@@ -97,8 +96,8 @@ console.log('my current user is',user.email,user.emailVerified);
                   onChangeText={handleChange('password')}
                   value={values.password}
                 />
-                <AuthButton />
-                <Button title="go to note" onPress={handleSubmit} />
+                <AuthButton title='Login' onPress={handleSubmit} />
+               
               </View>
             )}
           </Formik>

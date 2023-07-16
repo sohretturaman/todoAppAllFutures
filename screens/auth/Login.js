@@ -29,12 +29,33 @@ const Login = () => {
    const current = auth().currentUser  
   console.log('my current user is',user?.email ,'second way',current?.email);
 
+useEffect(()=>{
+  getUserItem();
+},[])
+
+  const getUserItem = async () => {
+    try {
+      const getUser = await AsyncStorage.getItem('user');
+      if (getUser !== null) {
+        let parsed = JSON.parse(getUser);
+        setUser(parsed);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleLogin = async(values) => {
     setLoading(true);
     try {
        const login=  await auth().signInWithEmailAndPassword(values?.email, values?.password);
         setLoading(true);
         console.log('my value to set user',login.user);
+        if(login.user){
+          setUser(login.user)
+          navigation.navigate('Root',{screen:'Bottom'})
+        }
+        /*
          if(login.user) {
             AsyncStorage.setItem('user',JSON.stringify(login.user))
             .then(()=>
@@ -42,9 +63,9 @@ const Login = () => {
               })
             .catch((err)=>console.log('error',err))
 
-            navigation.navigate('Root' , { screen: 'Bottom' });
+            navigation.navigate("Root",{screen:'Bottom'});
         
-          }
+          }*/
     } catch (e) {
         setLoading(false);
         console.log('hata var',e);
@@ -53,6 +74,8 @@ const Login = () => {
           
     setLoading(false); 
   };
+
+
 
   if(loading){
     return(

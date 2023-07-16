@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View, StatusBar, ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   NavigationContainer,
@@ -32,20 +38,18 @@ import Signup from './auth/Signup';
 import {firebase} from '@react-native-firebase/auth';
 
 const TabStack = createBottomTabNavigator();
-const Stack2 = createStackNavigator();
 const Stack = createStackNavigator();
-const MainStack =createStackNavigator();
 
 const NavigationPage = () => {
   const [authUser, setAuthUser] = useState('');
   const [user, setUser] = useState('');
   const [notes, setNotes] = useState([]);
-  const[loading,setLoading] =useState(false); 
+  const [loading, setLoading] = useState(false);
   //  const [moveToTrash, setMoveToTrash] = useState([]);
 
   useEffect(() => {
     getNotes();
-    getUserItem();
+    //getUserItem();
     firebase.auth().onAuthStateChanged(userData => {
       setAuthUser(userData?.email ?? '');
     });
@@ -70,13 +74,11 @@ const NavigationPage = () => {
       if (data !== null) {
         let parsed = JSON.parse(data);
         setNotes(parsed);
-     
       }
     } catch (error) {
       console.log(error);
-  
     }
-    setLoading(false)
+    setLoading(false);
     /*
     try {
       const trash = await AsyncStorage.getItem('saveTrash');
@@ -193,7 +195,7 @@ const NavigationPage = () => {
       </Stack.Navigator>
     );
   };
-  
+
   const CalendarComp = props => (
     <ShowOnCalendar {...props} setNotes={setNotes} notes={notes} />
   );
@@ -219,43 +221,46 @@ const NavigationPage = () => {
 
   let currentTheme = useSelector(selector => selector.changeTheme);
 
-
-const MainStackComp = ()=>{
-    return(
-      <MainStack.Navigator>
-         <MainStack.Screen
+  const MainStackComp = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
           name="Bottom"
           component={BottomStack}
           options={{headerShown: false}}
         />
 
-        <MainStack.Screen name="AddNote" component={AddNoteComp} />
-        <MainStack.Screen name="DeletedNote" component={DelNoteComp} />
-        <MainStack.Screen name="EditNote" component={EditNoteComp} />
-        <MainStack.Screen name="Settings" component={SettingScreenComp} />
-        <MainStack.Screen name="AddTask" component={AddTask} />
-      </MainStack.Navigator>
-    )
-  }
+        <Stack.Screen name="AddNote" component={AddNoteComp} />
+        <Stack.Screen name="DeletedNote" component={DelNoteComp} />
+        <Stack.Screen name="EditNote" component={EditNoteComp} />
+        <Stack.Screen name="Settings" component={SettingScreenComp} />
+        <Stack.Screen name="AddTask" component={AddTask} />
+      </Stack.Navigator>
+    );
+  };
 
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <View>
-               <ActivityIndicator size={50} style={{shadowColor:'black'}}/>
+        <ActivityIndicator size={50} style={{shadowColor: 'black'}} />
       </View>
-   )
+    );
   }
   return (
     <NavigationContainer
       theme={currentTheme ? customDarkTheme : customDefaultTheme}>
-                      
-    <Stack2.Navigator> 
-      
-        <Stack2.Screen name="Auth" component={AuthStack} options={{headerShown: false}}/>
-         
-         <Stack2.Screen name='Root' component={MainStackComp}  options={{headerShown: false}} />
-        
-  </Stack2.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Root"
+          component={MainStackComp}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Auth"
+          component={AuthStack}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

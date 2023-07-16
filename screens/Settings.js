@@ -24,27 +24,24 @@ const Settings = ({navigation, ...props}) => {
 
   useEffect(()=>{
     firebase.auth().onAuthStateChanged((userData)=>{
-      setUser(userData?.email? userData.email:'');
+      setUser(!!userData);
       
     })
   },[])
 
 const handleSignout= ()=>{
- AsyncStorage.removeItem("user")
-  .then(() => {
-   firebase.auth()
-    .signOut()
-    .then(() => {
-    navigation.navigate("Auth");
+  try {
+    firebase.auth().signOut()
+   
+    
  
-    })
-    .catch(error => {
-     Alert.alert("Logout Error FB");
-    });
-  })
-  .catch(error => {
-   Alert.alert("Logout Error Storage");
-  });
+  } catch (error) {
+    console.log("error while signout",error);
+    
+  }
+
+ 
+ 
 }
  
   return (
@@ -60,7 +57,8 @@ const handleSignout= ()=>{
       </Text>
       <Text>you are welcome {user}</Text>
       <Button title='got to login' onPress={()=>navigation.navigate('Login')} />
-      <Button title='Sign Out' onPress={handleSignout} />
+      <Button title='Sign Out' onPress={()=>firebase.auth().signOut()} />
+    {/** <Button title='go bottom' onPress={()=>navigation.navigate('Root',{screen:'Bottom'})} />  */} 
     </View>
   );
 };

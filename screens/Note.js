@@ -7,7 +7,8 @@ import {
   ScrollView,
   SafeAreaView,
   Dimensions,
-  FlatList
+  FlatList,
+  Button
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -87,7 +88,16 @@ const Note = ({navigation, ...props}) => {
   
   useEffect(()=>{
     firebase.auth().onAuthStateChanged((userData)=>{
-      setUser(userData?.email??'');
+      if(!userData){
+        navigation.navigate('Auth',{screen:'Login'})
+        console.log('user is not exixt',userData);
+        
+      }else{
+        setUser(userData?.email??'');
+      console.log('my user is',userData);
+      }
+      // chack for firebase store if the user exist or not, based on that send user to login or signup
+      
        })
   },[])
 
@@ -128,6 +138,7 @@ const Note = ({navigation, ...props}) => {
       
       </View>
       <Text>you are welcome {user}</Text>
+      <Button onPress={()=>navigation.navigate('Root',{screen:'Settings'})} title='go settings'/>
 
       <AddButton onPress={()=>navigation.navigate('AddNote')} />
     </SafeAreaView>

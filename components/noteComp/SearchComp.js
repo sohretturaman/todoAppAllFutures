@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {styles} from '../screens/styles';
+import {styles} from '../../screens/styles';
 import {StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView,  Dimensions,TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';

@@ -18,24 +18,29 @@ import AddNote from './AddNote';
 import DeleteNote from './DeletedNote';
 import EditNote from './EditNote';
 import ShowOnCalendar from './ShowOnCalendar';
-import Moment from 'moment';
-import {format} from 'date-fns';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Tasks from './Tasks';
 import Translator from './Translator';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import HeaderComp from '../components/HeaderComp';
+import HeaderComp from '../components/noteComp/HeaderComp';
 import {Dimensions} from 'react-native';
 import Settings from './Settings';
-import HeaderTask from '../components/HeaderTask';
+import HeaderTask from '../components/noteComp/HeaderTask';
 import AddTask from './AddTask';
-import {customDarkTheme, customDefaultTheme} from '../components/Themes';
+import {
+  customDarkTheme,
+  customDefaultTheme,
+} from '../components/noteComp/Themes';
 import {useSelector} from 'react-redux';
 import Login from './auth/Login';
 import Signup from './auth/Signup';
 import {firebase} from '@react-native-firebase/auth';
+import ChatList from './chat/ChatList';
+import Chat from './chat/Chat';
+import {PaperProvider} from 'react-native-paper';
 
 const TabStack = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -157,6 +162,20 @@ const NavigationPage = () => {
           }}
         />
         <TabStack.Screen
+          name="ChatList"
+          component={ChatList}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name="chat"
+                size={30}
+                color={focused ? '#7E0CF5' : '#454545'}
+              />
+            ),
+            header: () => <HeaderTask />,
+          }}
+        />
+        <TabStack.Screen
           name="Task"
           component={Tasks}
           options={{
@@ -235,6 +254,7 @@ const NavigationPage = () => {
         <Stack.Screen name="EditNote" component={EditNoteComp} />
         <Stack.Screen name="Settings" component={SettingScreenComp} />
         <Stack.Screen name="AddTask" component={AddTask} />
+        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
     );
   };
@@ -249,18 +269,20 @@ const NavigationPage = () => {
   return (
     <NavigationContainer
       theme={currentTheme ? customDarkTheme : customDefaultTheme}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Root"
-          component={MainStackComp}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Auth"
-          component={AuthStack}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
+      <PaperProvider>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Root"
+            component={MainStackComp}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Auth"
+            component={AuthStack}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </PaperProvider>
     </NavigationContainer>
   );
 };

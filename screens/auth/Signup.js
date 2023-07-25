@@ -12,8 +12,8 @@ import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import Input from '../../components/authComp/Input';
 import AuthButton from '../../components/authComp/AuthButton';
-import Themes, {customDarkTheme} from '../../components/Themes';
-import {customDefaultTheme} from '../../components/Themes';
+import Themes, {customDarkTheme} from '../../components/noteComp/Themes';
+//import {customDefaultTheme} from '../../components/Themes';
 import auth from '@react-native-firebase/auth';
 import {Formik} from 'formik';
 

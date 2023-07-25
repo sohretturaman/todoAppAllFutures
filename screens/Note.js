@@ -15,12 +15,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {styles} from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AutocompleteInput from 'react-native-autocomplete-input';
-import NoteComp from '../components/NoteComp';
-import SearchComp from '../components/SearchComp';
+import NoteComp from '../components/noteComp/NoteComp';
+import SearchComp from '../components/noteComp/SearchComp';
 import { useDispatch, useSelector } from 'react-redux';
 import {  AddNoteToTrash, RemoveNoteItem } from '../components/redux/action/Actions';
 import {useTheme} from '@react-navigation/native'
-import AddButton from '../components/AddButton'
+import AddButton from '../components/noteComp/AddButton'
 import { firebase } from '@react-native-firebase/auth';
 
 

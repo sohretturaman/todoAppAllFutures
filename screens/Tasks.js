@@ -15,11 +15,11 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
-import AddButton from '../components/AddButton';
+import AddButton from '../components/noteComp/AddButton';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {useNavigation} from '@react-navigation/native';
-import SearchComp from '../components/SearchComp';
-import AddTaskComp from '../components/AddTaskComp';
+import SearchComp from '../components/noteComp/SearchComp';
+import AddTaskComp from '../components/noteComp/AddTaskComp';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 

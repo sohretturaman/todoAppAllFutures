@@ -94,7 +94,7 @@ const Note = ({navigation, ...props}) => {
         
       }else{
         setUser(userData?.email??'');
-      console.log('my user is',userData);
+     // console.log('my user is',userData);
       }
       // chack for firebase store if the user exist or not, based on that send user to login or signup
       

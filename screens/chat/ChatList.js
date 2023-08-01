@@ -1,10 +1,9 @@
-import {StyleSheet, Text, TextInput, View, SafeAreaView} from 'react-native';
-import React, {useEffect} from 'react';
+import {StyleSheet, Text, TextInput, View, SafeAreaView, FlatList} from 'react-native';
+import React, {useEffect, useRef} from 'react';
 import {Avatar, Divider, FAB, List} from 'react-native-paper';
 
 import {PaperProvider, Button, Dialog, Portal} from 'react-native-paper';
 import {useState} from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
 import Firestore from '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
@@ -14,77 +13,133 @@ function ChatList() {
   const [visible, setVisible] = useState(false);
   const [frgnEmail, setFrgnEmail] = useState('');
   const [myEmail, setMyEmail] = useState('');
-  const [chatListData, setChatListData] = useState([]);
+  const [myUser,setMyUser]=useState([]);
+
+  const [chatListData, setChatListData] = useState();
   const[newChatLoading,setNewChatLoading]=useState(false); 
+
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  const HandleCreateChat = async () => {
-    // console.log('my data',myEmail);
-    // console.log('*******************');
-    // console.log('and second data',frgnEmail);
-    try {
-      if (frgnEmail && myEmail) {
-        setNewChatLoading(true); 
-       const result = await Firestore()
+  const HandleCreateChat =  () => {
+    if (!myEmail || !frgnEmail) return;
+      const savedUsers=  Firestore()
           .collection('chats')
           .add({users: [myEmail, frgnEmail]});
-        setVisible(false);
-         navigation.navigate('Chat',{resultId:result.id})
-         console.log('result id', result);
+       
+         navigation.navigate('Chat')
+         setVisible(false);
+         setFrgnEmail('');
+          
+         console.log('data  after creation',savedUsers);
          
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-    setFrgnEmail('');
-    setNewChatLoading(false); 
   };
+
+
+
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       setMyEmail(user?.email ?? '');
+      setMyUser(user); 
+   //   console.log('my user is here', user);
+      
     });
-  
+   
   }, []);
 
 
-  useEffect(()=>{
-   firebase
+{/**
+ useEffect(()=>{
+    firebase
     .firestore()
     .collection('chats')
     .where('users', 'array-contains', myEmail)
     .onSnapshot(onSnapShotData => {
       setChatListData(onSnapShotData.docs);
     });
-  },[myEmail])
-
-
-
- // console.log('data ',chatListData.map((x)=>x.data().users));
+    console.log('**** useEffect worked my data in chatlist',chatListData.map((x)=>x.data().users));
+ 
   
+  },[myEmail]) //Creates an infinite loop */}
+ 
+
+
+  const getUsers =  ()=> {
+    let users = []; 
+   Firestore().collection('chats')
+  .where('users','array-contains',myEmail)
+  .onSnapshot((snapshot)=>{
+      users = snapshot.docs.map((mapVal)=>{
+      const   data = mapVal.data(); 
+     
+      console.log('data from map ',data);
+      setChatListData(users);
+      return data ; 
+    })
+     console.log('users',users);
+    
+  
+     
+  })
+    
+  setChatListData(users);
+  console.log('data from users what ',users);
+  
+  }
+  
+  useEffect(()=>{
+    getUsers()
+
+  },[])
+  
+
+
+
+
+  
+console.log('my data ', chatListData);
+
   
   return (
     <SafeAreaView style={{flex: 1}}>
-      <ScrollView>
+   
         <View>
-          {chatListData?.map((item,index) => {
-            return (
-              <View key={index}>
-                <List.Item
-                  title={item.data().users.filter(x=>x!==myEmail)}
+
+
+   {/**
+    * {chatListData.map((chat,index)=>(
+            <React.Fragment key={index}>
+               <List.Item
+                  title={chat.data().users.filter(x=>x!==myEmail)}
                   description="Item description"
-                  left={()=><Avatar.Text  size={50}  style={{marginLeft:5}} label={item.data().users.find(x=> x!==myEmail).split(' ').reduce((prev,current)=>prev+current[0],'')} />}
+                  left={()=><Avatar.Text  size={50}  style={{marginLeft:5}} label={chat.data().users.find(x=> x!==myEmail).split(' ').reduce((prev,current)=>prev+current[0],'')} />}
                
-               onPress={()=>navigation.navigate('Chat',{chatId:item.id})}/>
+               onPress={()=>navigation.navigate('Chat',{chatId:chat.id})}/>
                 <Divider
                   
                   style={{backgroundColor: 'white', padding:2}}
                 />
-              </View>
-            );
-          })}
+            </React.Fragment>
+          ))}
+    
+    * 
+    */}
+   
+ 
+ <FlatList  data={chatListData} keyExtractor={(item)=>item.id}
+  renderItem={(item)=>(
+  
+  <View>
+    <Text> hey data {item}</Text>
+  </View>
+ )}/>
+  
+         
+     
+        
+
 
           {/**chat list , dialog componnet react  native paper */}
           <Portal>
@@ -100,12 +155,12 @@ function ChatList() {
               </Dialog.Content>
               <Dialog.Actions>
                 <Button onPress={hideDialog}>Cancel</Button>
-                <Button onPress={HandleCreateChat} >done</Button>
+                <Button onPress={HandleCreateChat} newChatLoading={newChatLoading}  >done</Button>
               </Dialog.Actions>
             </Dialog>
           </Portal>
         </View>
-      </ScrollView>
+     
 
       {/**FAB button for  creating new dialog */}
       <FAB

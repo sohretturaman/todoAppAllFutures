@@ -18,6 +18,7 @@ import {customDefaultTheme} from '../../components/Themes';
 import auth, { firebase } from '@react-native-firebase/auth';
 import {Formik} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Subheading } from 'react-native-paper';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -25,9 +26,10 @@ const Login = () => {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState({});
   const [loading,setLoading]=useState(false); 
+  const [error,setError]=useState('');
 
-   const current = auth().currentUser  
-  console.log('my current user is',user?.email ,'second way',current?.email);
+   //const current = auth().currentUser  
+ // console.log('my current user is',user?.email ,'firebase way',current?.email);
 
 useEffect(()=>{
   getUserItem();
@@ -42,19 +44,24 @@ useEffect(()=>{
       }
     } catch (error) {
       console.log(error);
+      
     }
   };
 
   const handleLogin = async(values) => {
+    console.log('values',values);
     setLoading(true);
     try {
-       const login=  await auth().signInWithEmailAndPassword(values?.email, values?.password);
-        setLoading(true);
-        console.log('my value to set user',login.user);
-        if(login.user){
+       const login=  await auth().signInWithEmailAndPassword(values.email, values.password);
+        console.log('login worked',login);
+          
+      if(login){
           setUser(login.user)
           navigation.navigate('Root',{screen:'Bottom'})
+          console.log('login is succesful, navigation is working');
+          
         }
+        setLoading(false);
         /*
          if(login.user) {
             AsyncStorage.setItem('user',JSON.stringify(login.user))
@@ -69,7 +76,7 @@ useEffect(()=>{
     } catch (e) {
         setLoading(false);
         console.log('hata var',e);
-   
+        setError(e.message);
         }
           
     setLoading(false); 
@@ -89,6 +96,7 @@ useEffect(()=>{
     <KeyboardAvoidingView style={{height: '100%'}}>
       <SafeAreaView style={styles.container}>
         {/**header  wrapper */}
+        <Subheading style={{color:'red'}}>{error}</Subheading>
         <View style={styles.bodyWrapper}>
           <Image
             source={require('../../components/image/chat.png')}
@@ -102,12 +110,12 @@ useEffect(()=>{
           <View>{/**configure with  formik !!! */}</View>
 
           <Formik
-            initialValues={{email: '', password: ''}}
+            initialValues={{email:'', password:''}}
             onSubmit={handleLogin }>
             {({handleChange, handleSubmit, values}) => (
               <View style={styles.bottomWrapper}>
                 <Input
-                  placeholder={'please write email'}
+                  placeholder={'please write username or email'}
                   title={'Email'}
                   onChangeText={handleChange('email')}
                   value={values.email}
@@ -119,7 +127,7 @@ useEffect(()=>{
                   onChangeText={handleChange('password')}
                   value={values.password}
                 />
-                <AuthButton title='Login' onPress={handleSubmit} />
+                <AuthButton title='Login' onPress={handleSubmit}  isLoading={loading}/>
                
               </View>
             )}

@@ -16,48 +16,71 @@ import Themes, {customDarkTheme} from '../../components/noteComp/Themes';
 //import {customDefaultTheme} from '../../components/Themes';
 import auth from '@react-native-firebase/auth';
 import {Formik} from 'formik';
+import { Subheading } from 'react-native-paper';
 
 const Signup = () => {
   const navigation = useNavigation();
   const [logged, setLogged] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [error,setError] = useState('');
+  const[isLoding,setIsLoading]= useState(false); 
 
 
 
-  const handleSignup = (values) => {
-    auth()
-      .createUserWithEmailAndPassword(
-        values.email,
-        values.password,
-        values.rePassword
-      )
-      .then(() => {
-        console.log('User account created & signed in!');
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
+  const handleSignup =async (values) => {
+    try {
+     if(values.password !==values.rePassword){
+        console.log('passwords doesnt match');
+        setError('Password dont match'); 
+        
+      }
+      setIsLoading(true);
+        const response = await auth().createUserWithEmailAndPassword(values.email,values.password);
+       await response.user.updateProfile({ displayName:values.username});
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
+        console.log('User account created & signed in! response',response);
+        setIsLoading(false); 
+        navigation.navigate('Login')
+      
+           
+} catch (error) {
+      setIsLoading(false); 
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+         setError(error.message);
 
-        console.error(error);
-      });
+      }
+
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+        setError(error.message);
+      }
+      if(values.password !==values.rePassword){
+        console.log('password doest match',values.password,values.rePassword);
+        setError(error.message)   
+      }
+
+      setError(error.message);
+      console.log('error exist',error.message);
+      
+    }
+ 
 
   };
+
 
   return (
     <KeyboardAvoidingView style={{height: '100%'}}>
       <SafeAreaView style={styles.container}>
+      <Subheading style={{color:'red'}}>{error}</Subheading>
+       
         {/**header  wrapper */}
         <View style={styles.bodyWrapper}>
           <Image
             source={require('../../components/image/chat.png')}
             style={styles.image}
           />
-          <Text style={styles.text}>Focused</Text>
+         {/**<Text style={styles.text}>Focused</Text> */} 
           <Text style={styles.disc}>
             save your notes in english by default, work with your team, call
             your team, share the screen and learn english at the same team.
@@ -65,10 +88,16 @@ const Signup = () => {
           <View>{/**configure with  formik !!! */}</View>
 
           <Formik
-            initialValues={{email: '', password: '',rePassword:''}}
+            initialValues={{username:'',email: '', password: '',rePassword:''}}
             onSubmit={handleSignup }>
             {({handleChange, handleSubmit, values}) => (
               <View style={styles.bottomWrapper}>
+                 <Input
+                  placeholder={'please write username'}
+                  title={'User Name'}
+                  onChangeText={handleChange('username')}
+                  value={ values.username}
+                />
                 <Input
                   placeholder={'please write email'}
                   title={'Email'}
@@ -89,8 +118,9 @@ const Signup = () => {
                   onChangeText={handleChange('rePassword')}
                   value={values.rePassword}
                 />
-                <AuthButton />
-                <Button title="go to note" onPress={handleSubmit} />
+                <AuthButton  title='Go Login' onPress={()=>navigation.navigate('Login')} isLoading={isLoding} />
+                <AuthButton  title='Sign Up' onPress={handleSubmit} isLoading={isLoding} />
+
               </View>
             )}
           </Formik>
@@ -112,8 +142,8 @@ const styles = StyleSheet.create({
 
   image: {
     resizeMode: 'cover',
-    height: '30%',
-    width: '50%',
+    height: '20%',
+    width: '40%',
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: 2,
@@ -123,7 +153,7 @@ const styles = StyleSheet.create({
     color: customDarkTheme.colors.primary,
     fontSize: 18,
     justifyContent: 'center',
-    fontSize: 60,
+    fontSize: 50,
     fontWeight: '500',
     alignSelf: 'center',
   },
@@ -143,6 +173,6 @@ const styles = StyleSheet.create({
   },
   bottomWrapper: {
     backgroundColor: 'white',
-    marginTop: 20,
+    marginTop: 0,
   },
 });

@@ -9,6 +9,7 @@ function Input({onChangeText, value, placeholder, isSecure, title}) {
       </Text>
       <View style={styles.inputWrapper}>
         <TextInput
+        autoCapitalize='none'
           placeholder={placeholder}
           secureTextEntry={isSecure}
           value={value}

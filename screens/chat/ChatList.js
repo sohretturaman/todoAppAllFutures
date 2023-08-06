@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TextInput, View, SafeAreaView, FlatList} from 'react-native';
+import {StyleSheet, Text, TextInput, View, SafeAreaView, FlatList,TouchableOpacity} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {Avatar, Divider, FAB, List} from 'react-native-paper';
 
@@ -7,6 +7,8 @@ import {useState} from 'react';
 import Firestore from '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import  database ,{getDatabase,get}from '@react-native-firebase/database';
+
 
 function ChatList() {
   const navigation = useNavigation(); 
@@ -14,6 +16,7 @@ function ChatList() {
   const [frgnEmail, setFrgnEmail] = useState('');
   const [myEmail, setMyEmail] = useState('');
   const [myUser,setMyUser]=useState([]);
+  const [isLoading,setIsLoading]=useState(false)
 
   const [chatListData, setChatListData] = useState();
   const[newChatLoading,setNewChatLoading]=useState(false); 
@@ -22,19 +25,95 @@ function ChatList() {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
+
+
   const HandleCreateChat =  () => {
     if (!myEmail || !frgnEmail) return;
-      const savedUsers=  Firestore()
-          .collection('chats')
-          .add({users: [myEmail, frgnEmail]});
-       
-         navigation.navigate('Chat')
-         setVisible(false);
-         setFrgnEmail('');
-          
-         console.log('data  after creation',savedUsers);
+   const myColluctor =  createNewUser(frgnEmail); 
+   console.log('here teh colluctor',myColluctor.userName);
+  
+   
+   if(myColluctor.userName !== myEmail){
+   const newChatRoom= database()
+    .ref('chatrooms/')
+    .push({
+      firstUser: myEmail,
+      secondUser:frgnEmail,
+      messages:[]
+    })
+    .then((data) => console.log('Data set.',data));
+   
+    const chatRoomKey = newChatRoom.key;
+    console.log('here is the key',chatRoomKey);
+    
+
+   }
+ 
          
+   
   };
+
+ const handleNewChatRoom=()=>{
+ 
+  const myColluctor =  createNewUser(frgnEmail); 
+  console.log('here the colluctor',myColluctor.userName);
+ 
+  
+  if(myColluctor.userName !== myEmail){
+  const newChatRoom= database()
+   .ref('chatrooms/')
+   .push({
+     firstUser: myEmail,
+     secondUser:frgnEmail,
+     messages:[]
+   })
+   .then((data) => console.log('Data seted.',data));
+  
+   const chatRoomKey = newChatRoom.key;
+   console.log('here is the key',chatRoomKey);
+   
+
+  }
+ 
+ }
+
+
+  const createNewUser=(newCollocutor)=>{
+  
+   
+      setIsLoading(true); 
+      const newContent = [{
+        userName:newCollocutor,
+        profile:'https://i.pravatar.cc/300',
+        friends:[]
+  
+      }]
+    
+      database().ref('users/').push(newContent); 
+      setIsLoading(false);
+       setVisible(false);
+       setFrgnEmail('');
+
+   
+    return newContent;
+  }
+
+
+  const findUser = (frgnUserame)=>{
+    console.log('myuser ',myEmail);
+    
+    try {
+       database().ref(`users/`).on('value',snapshot=>{
+        console.log('here is the snapshor from user list',snapshot.val());
+        
+       })
+   
+    } catch (error) {
+       console.log('new eror',error);
+       
+    } 
+   
+  }
 
 
 
@@ -43,9 +122,10 @@ function ChatList() {
     firebase.auth().onAuthStateChanged(user => {
       setMyEmail(user?.email ?? '');
       setMyUser(user); 
-   //   console.log('my user is here', user);
+     // console.log('my user is here', user.email);
       
     });
+  
    
   }, []);
 
@@ -66,46 +146,19 @@ function ChatList() {
  
 
 
-  const getUsers =  ()=> {
-    let users = []; 
-   Firestore().collection('chats')
-  .where('users','array-contains',myEmail)
-  .onSnapshot((snapshot)=>{
-      users = snapshot.docs.map((mapVal)=>{
-      const   data = mapVal.data(); 
-     
-      console.log('data from map ',data);
-      setChatListData(users);
-      return data ; 
-    })
-     console.log('users',users);
-    
-  
-     
-  })
-    
-  setChatListData(users);
-  console.log('data from users what ',users);
-  
-  }
-  
-  useEffect(()=>{
-    getUsers()
 
-  },[])
   
+ 
 
 
 
 
-  
-console.log('my data ', chatListData);
 
   
   return (
-    <SafeAreaView style={{flex: 1}}>
-   
+    <SafeAreaView style={{flex:1}}>
         <View>
+        
 
 
    {/**
@@ -128,15 +181,11 @@ console.log('my data ', chatListData);
     */}
    
  
- <FlatList  data={chatListData} keyExtractor={(item)=>item.id}
-  renderItem={(item)=>(
+
   
-  <View>
-    <Text> hey data {item}</Text>
-  </View>
- )}/>
-  
-         
+         <TouchableOpacity onPress={findUser }>
+          <Text style={{marginTop:20 , color:'red',fontSize:40}}> here it is </Text>
+         </TouchableOpacity>
      
         
 

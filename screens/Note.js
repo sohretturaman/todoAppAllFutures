@@ -88,16 +88,12 @@ const Note = ({navigation, ...props}) => {
   
   useEffect(()=>{
     firebase.auth().onAuthStateChanged((userData)=>{
+      setUser(userData?.displayName??'');
       if(!userData){
-        navigation.navigate('Auth',{screen:'Login'})
-        console.log('user is not exixt',userData);
+        navigation.navigate('Auth',{screen:'Signup'})
+        console.log('user is not exist',userData);
         
-      }else{
-        setUser(userData?.email??'');
-     // console.log('my user is',userData);
       }
-      // chack for firebase store if the user exist or not, based on that send user to login or signup
-      
        })
   },[])
 

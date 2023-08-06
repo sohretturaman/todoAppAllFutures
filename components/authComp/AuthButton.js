@@ -6,11 +6,11 @@ const colors={
   green:'#ffc0cb'
 }
 
-const AuthButton = ({title='Login',onPress}) => {
+const AuthButton = ({title='',onPress,isLoading}) => {
   return (
     <View style={styles.container}>
-          <TouchableOpacity onPress={onPress} style={styles.buttonWrapper}>
-             <Text style={styles.text}>{title}</Text>
+          <TouchableOpacity onPress={onPress} style={styles.buttonWrapper}  isLoading={isLoading}>
+             <Text style={styles.text}>{isLoading ? 'loading':title}</Text>
           </TouchableOpacity>
     </View>
   );
@@ -20,7 +20,7 @@ export default AuthButton
 
 const styles = StyleSheet.create({
   container:{
-    backgroundColor:'white',
+    backgroundColor: isLoading?'blue':'white',
     width:'90%',
     justifyContent:'center',
     alignItems:'center',

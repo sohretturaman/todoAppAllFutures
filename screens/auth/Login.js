@@ -54,11 +54,11 @@ useEffect(()=>{
     try {
        const login=  await auth().signInWithEmailAndPassword(values.email, values.password);
         console.log('login worked',login);
-          
+        navigation.navigate('Root',{screen:'Bottom'})
+        setUser(login.user)
+
       if(login){
-          setUser(login.user)
-          navigation.navigate('Root',{screen:'Bottom'})
-          console.log('login is succesful, navigation is working');
+         console.log('login is succesful, navigation is working',login.user);
           
         }
         setLoading(false);
@@ -96,7 +96,7 @@ useEffect(()=>{
     <KeyboardAvoidingView style={{height: '100%'}}>
       <SafeAreaView style={styles.container}>
         {/**header  wrapper */}
-        <Subheading style={{color:'red'}}>{error}</Subheading>
+        {!!error&& <Subheading style={{color:'red'}}>{error}</Subheading>}
         <View style={styles.bodyWrapper}>
           <Image
             source={require('../../components/image/chat.png')}

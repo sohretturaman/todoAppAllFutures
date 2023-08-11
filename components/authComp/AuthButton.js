@@ -20,7 +20,7 @@ export default AuthButton
 
 const styles = StyleSheet.create({
   container:{
-    backgroundColor: isLoading?'blue':'white',
+    backgroundColor:'blue',
     width:'90%',
     justifyContent:'center',
     alignItems:'center',

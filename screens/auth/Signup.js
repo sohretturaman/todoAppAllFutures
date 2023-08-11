@@ -39,6 +39,8 @@ const Signup = () => {
        await response.user.updateProfile({ displayName:values.username});
 
         console.log('User account created & signed in! response',response);
+         
+        
         setIsLoading(false); 
         navigation.navigate('Login')
       
@@ -69,6 +71,9 @@ const Signup = () => {
   };
 
 
+  const findUserWhileSave=()=>{
+
+  }
   return (
     <KeyboardAvoidingView style={{height: '100%'}}>
       <SafeAreaView style={styles.container}>

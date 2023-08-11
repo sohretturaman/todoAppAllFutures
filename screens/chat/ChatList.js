@@ -4,10 +4,11 @@ import {Avatar, Divider, FAB, List} from 'react-native-paper';
 
 import {PaperProvider, Button, Dialog, Portal} from 'react-native-paper';
 import {useState} from 'react';
-import Firestore from '@react-native-firebase/firestore';
-import {firebase} from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app';
 import { useNavigation } from '@react-navigation/native';
 import  database ,{getDatabase,get}from '@react-native-firebase/database';
+import firestore from '@react-native-firebase/firestore'
+import { set } from 'date-fns';
 
 
 function ChatList() {
@@ -17,103 +18,47 @@ function ChatList() {
   const [myEmail, setMyEmail] = useState('');
   const [myUser,setMyUser]=useState([]);
   const [isLoading,setIsLoading]=useState(false)
-
-  const [chatListData, setChatListData] = useState();
-  const[newChatLoading,setNewChatLoading]=useState(false); 
-
-
-  const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
-
-
-
-  const HandleCreateChat =  () => {
-    if (!myEmail || !frgnEmail) return;
-   const myColluctor =  createNewUser(frgnEmail); 
-   console.log('here teh colluctor',myColluctor.userName);
   
-   
-   if(myColluctor.userName !== myEmail){
-   const newChatRoom= database()
-    .ref('chatrooms/')
-    .push({
-      firstUser: myEmail,
-      secondUser:frgnEmail,
-      messages:[]
-    })
-    .then((data) => console.log('Data set.',data));
-   
-    const chatRoomKey = newChatRoom.key;
-    console.log('here is the key',chatRoomKey);
-    
+  const [chatIds,setChatIds]=useState([]);
+  const [chatListData, setChatListData] = useState([]);
 
-   }
- 
+
+
+
+
+
+  const HandleCreateChat =  async() => {
+    if (!myEmail || !frgnEmail) return;
+    setIsLoading(true)
+  
+  const createChat = await firebase.firestore()
+  .collection("chats")
+  .add(
+    {
+    users:[myEmail,frgnEmail],
+    messages:[]
+    }
+    ).then((query)=>
+    { console.log('looking for id',query.id??'there is no id');
+
+        firestore()
+        .doc('chats/'+query.id)
+        .set({chatId:query.id},{merge:true})
+      setVisible(false);
+     
+      
+    }).catch((err)=>{
+      console.log('error exist while saving id',err.message)
+      setIsLoading(false)
+    } )
+    setFrgnEmail('');
+   console.log('after crating chat',createChat);
+   
          
    
   };
 
- const handleNewChatRoom=()=>{
- 
-  const myColluctor =  createNewUser(frgnEmail); 
-  console.log('here the colluctor',myColluctor.userName);
- 
-  
-  if(myColluctor.userName !== myEmail){
-  const newChatRoom= database()
-   .ref('chatrooms/')
-   .push({
-     firstUser: myEmail,
-     secondUser:frgnEmail,
-     messages:[]
-   })
-   .then((data) => console.log('Data seted.',data));
-  
-   const chatRoomKey = newChatRoom.key;
-   console.log('here is the key',chatRoomKey);
-   
 
-  }
- 
- }
-
-
-  const createNewUser=(newCollocutor)=>{
-  
-   
-      setIsLoading(true); 
-      const newContent = [{
-        userName:newCollocutor,
-        profile:'https://i.pravatar.cc/300',
-        friends:[]
-  
-      }]
-    
-      database().ref('users/').push(newContent); 
-      setIsLoading(false);
-       setVisible(false);
-       setFrgnEmail('');
-
-   
-    return newContent;
-  }
-
-
-  const findUser = (frgnUserame)=>{
-    console.log('myuser ',myEmail);
-    
-    try {
-       database().ref(`users/`).on('value',snapshot=>{
-        console.log('here is the snapshor from user list',snapshot.val());
-        
-       })
-   
-    } catch (error) {
-       console.log('new eror',error);
-       
-    } 
-   
-  }
 
 
 
@@ -130,39 +75,60 @@ function ChatList() {
   }, []);
 
 
-{/**
+
+
+
  useEffect(()=>{
-    firebase
-    .firestore()
-    .collection('chats')
-    .where('users', 'array-contains', myEmail)
+    firestore()
+    .collection("chats")
+    .where('users','array-contains',myEmail)
     .onSnapshot(onSnapShotData => {
-      setChatListData(onSnapShotData.docs);
-    });
-    console.log('**** useEffect worked my data in chatlist',chatListData.map((x)=>x.data().users));
+      const data = onSnapShotData.docs
+      setChatListData(data); 
+      console.log('data id',data.map((chat)=>chat.id));
+      
+     
+    }); 
+
+  {/**
+    firestore()
+  .collection('chats').where('users','array-contains',myEmail)
+  .get()
+  .then(querySnapshot => {
+    let chatIDs=[]; 
+    let users =[]; 
+  //console.log('Total users: ', querySnapshot.size);
+  querySnapshot.forEach(documentSnapshot => {
+    chatIDs.push(documentSnapshot.id);
+    users.push(documentSnapshot.data());
+     // console.log('chat ID: ', documentSnapshot.id, documentSnapshot.data());
+   });
+    setChatIds(chatIDs);
+    setChatListData(users);
+    console.log('my users',users);
+    
+  });
+ */}
+
+
+
+{/**it is done , I can able to take data with chatid keys 
+firestore().collection('chats').doc(chatIds[0]).onSnapshot((val)=>{
+  console.log('value from chat ids**',val.data());
+ })
+*/}
  
   
-  },[myEmail]) //Creates an infinite loop */}
+  },[myEmail]) 
+
  
-
-
-
-  
- 
-
-
-
-
-
   
   return (
     <SafeAreaView style={{flex:1}}>
         <View>
-        
+   
 
-
-   {/**
-    * {chatListData.map((chat,index)=>(
+ {chatListData?.map((chat,index)=>(  
             <React.Fragment key={index}>
                <List.Item
                   title={chat.data().users.filter(x=>x!==myEmail)}
@@ -177,15 +143,17 @@ function ChatList() {
             </React.Fragment>
           ))}
     
-    * 
-    */}
+  
+ 
+    
+  
+   
+
    
  
 
   
-         <TouchableOpacity onPress={findUser }>
-          <Text style={{marginTop:20 , color:'red',fontSize:40}}> here it is </Text>
-         </TouchableOpacity>
+        
      
         
 
@@ -203,8 +171,8 @@ function ChatList() {
                 />
               </Dialog.Content>
               <Dialog.Actions>
-                <Button onPress={hideDialog}>Cancel</Button>
-                <Button onPress={HandleCreateChat} newChatLoading={newChatLoading}  >done</Button>
+                <Button onPress={()=>setVisible(false)}>Cancel</Button>
+                <Button onPress={HandleCreateChat} loading={isLoading}>done</Button>
               </Dialog.Actions>
             </Dialog>
           </Portal>
@@ -215,7 +183,7 @@ function ChatList() {
       <FAB
         icon="plus"
         style={{position: 'absolute', bottom: 16, right: 16}}
-        onPress={showDialog}
+        onPress={()=>setVisible(true)}
       />
     </SafeAreaView>
   );

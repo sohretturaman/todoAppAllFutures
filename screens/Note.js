@@ -95,7 +95,7 @@ const Note = ({navigation, ...props}) => {
         
       }
        })
-  },[])
+  },[user])
 
   return (
     <SafeAreaView style={[styles.mainContainer,{backgroundColor:theme.colors.backdrop}]}>

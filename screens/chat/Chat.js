@@ -27,11 +27,17 @@ useEffect(() => {
  
 }, []);
 useEffect(()=>{
-  firebase.firestore().doc('chats/'+route.params.chatId)
-  .onSnapshot((onSnapshot)=>{
-    console.log('chat data',onSnapshot.data());
-     setMessages(onSnapshot.data()?.messages);
-  })
+  try {
+    firebase.firestore().doc('chats/'+route.params.chatId)
+    .onSnapshot((onSnapshot)=>{
+      console.log('chat data',onSnapshot.data());
+       setMessages(onSnapshot.data()?.messages);
+    })
+  } catch (error) {
+     console.warn('error exist in chat',error)
+     
+  }
+ 
 },[])
 
 
@@ -48,7 +54,7 @@ const onSend=(mes=[])=>{
 }
 
   return (
-    <View style={{flex:1,backgroundColor:'red'}}>
+    <View style={{flex:1,backgroundColor:'white'}}>
       <Text>Chat</Text>
       <Text style={{fontSize:60,color:'black'}}>heey </Text>
    

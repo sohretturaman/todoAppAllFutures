@@ -19,7 +19,6 @@ function ChatList() {
   const [myUser,setMyUser]=useState([]);
   const [isLoading,setIsLoading]=useState(false)
   
-  const [chatIds,setChatIds]=useState([]);
   const [chatListData, setChatListData] = useState([]);
 
 
@@ -29,8 +28,8 @@ function ChatList() {
 
   const HandleCreateChat =  async() => {
     if (!myEmail || !frgnEmail) return;
-    setIsLoading(true)
-  
+
+  setIsLoading(true)
   const createChat = await firebase.firestore()
   .collection("chats")
   .add(
@@ -40,18 +39,15 @@ function ChatList() {
     }
     ).then((query)=>
     { console.log('looking for id',query.id??'there is no id');
-
-        firestore()
-        .doc('chats/'+query.id)
-        .set({chatId:query.id},{merge:true})
-      setVisible(false);
-     
+    setFrgnEmail('');
+    setIsLoading(false);
+    setVisible(false);
       
     }).catch((err)=>{
       console.log('error exist while saving id',err.message)
       setIsLoading(false)
     } )
-    setFrgnEmail('');
+
    console.log('after crating chat',createChat);
    
          
@@ -79,49 +75,31 @@ function ChatList() {
 
 
  useEffect(()=>{
+  // beacuse of Query , when you create a new user there is no chat at the beginning 
+  try {
     firestore()
     .collection("chats")
     .where('users','array-contains',myEmail)
     .onSnapshot(onSnapShotData => {
       const data = onSnapShotData.docs
       setChatListData(data); 
-      console.log('data id',data.map((chat)=>chat.id));
-      
+     // console.log('data id',data.map((chat)=>chat.id));
+     console.log('data here for chatlistdata',data);
      
     }); 
-
-  {/**
-    firestore()
-  .collection('chats').where('users','array-contains',myEmail)
-  .get()
-  .then(querySnapshot => {
-    let chatIDs=[]; 
-    let users =[]; 
-  //console.log('Total users: ', querySnapshot.size);
-  querySnapshot.forEach(documentSnapshot => {
-    chatIDs.push(documentSnapshot.id);
-    users.push(documentSnapshot.data());
-     // console.log('chat ID: ', documentSnapshot.id, documentSnapshot.data());
-   });
-    setChatIds(chatIDs);
-    setChatListData(users);
-    console.log('my users',users);
     
-  });
- */}
+  } catch (error) {
+     console.log('error',error);
+     
+  }
+    
 
-
-
-{/**it is done , I can able to take data with chatid keys 
-firestore().collection('chats').doc(chatIds[0]).onSnapshot((val)=>{
-  console.log('value from chat ids**',val.data());
- })
-*/}
  
   
   },[myEmail]) 
 
  
+
   
   return (
     <SafeAreaView style={{flex:1}}>
@@ -143,19 +121,7 @@ firestore().collection('chats').doc(chatIds[0]).onSnapshot((val)=>{
             </React.Fragment>
           ))}
     
-  
- 
-    
-  
-   
 
-   
- 
-
-  
-        
-     
-        
 
 
           {/**chat list , dialog componnet react  native paper */}

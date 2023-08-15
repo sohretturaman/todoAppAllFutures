@@ -17,6 +17,7 @@ import Themes, {customDarkTheme} from '../../components/noteComp/Themes';
 import auth from '@react-native-firebase/auth';
 import {Formik} from 'formik';
 import { Subheading } from 'react-native-paper';
+import { firebase } from '@react-native-firebase/firestore';
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -24,26 +25,33 @@ const Signup = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [error,setError] = useState('');
   const[isLoding,setIsLoading]= useState(false); 
+  const [findedUser,setFindUser]=useState([]);
 
 
 
   const handleSignup =async (values) => {
+    setIsLoading(true);
     try {
      if(values.password !==values.rePassword){
         console.log('passwords doesnt match');
         setError('Password dont match'); 
-        
-      }
-      setIsLoading(true);
-        const response = await auth().createUserWithEmailAndPassword(values.email,values.password);
-       await response.user.updateProfile({ displayName:values.username});
+         }
 
-        console.log('User account created & signed in! response',response);
+          const response = await auth().createUserWithEmailAndPassword(values.email,values.password);
+          await response.user.updateProfile({ displayName:values.username});
+   
+           console.log('User account created & signed in! response',response);
+   
+            await firebase.firestore().collection('allUsers').add({
+             name:values.username,
+             email:values.email
+           });
+           
+           setIsLoading(false); 
+           navigation.navigate('Login')
+
          
-        
-        setIsLoading(false); 
-        navigation.navigate('Login')
-      
+ 
            
 } catch (error) {
       setIsLoading(false); 
@@ -71,9 +79,22 @@ const Signup = () => {
   };
 
 
-  const findUserWhileSave=()=>{
+  {/**
+   const findUser =async (frgnMail)=>{
+  
+    const citiesRef =firebase.firestore().collection('allUsers')
+    const response = await citiesRef.where('email','==',frgnMail).get().then((query)=>{
+      let data =query.docs.map((x)=>x.data())
+      console.log('feedBack data',data); 
+      setFindUser(data)
+    })
+ 
+  }
+   */
 
   }
+ 
+
   return (
     <KeyboardAvoidingView style={{height: '100%'}}>
       <SafeAreaView style={styles.container}>

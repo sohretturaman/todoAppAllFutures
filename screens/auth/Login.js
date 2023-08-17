@@ -52,13 +52,14 @@ useEffect(()=>{
     console.log('values',values);
     setLoading(true);
     try {
-       const login=  await auth().signInWithEmailAndPassword(values.email, values.password);
+       const login=  await auth().signInWithEmailAndPassword(values.email,values.password);
         console.log('login worked',login);
-        navigation.navigate('Root',{screen:'Bottom'})
+      //  navigation.navigate('Root',{screen:'Bottom'})
+        navigation.navigate('Note'); 
         setUser(login.user)
 
       if(login){
-         console.log('login is succesful, navigation is working',login.user);
+         console.log('login is succesful, my user is',login.user);
           
         }
         setLoading(false);
@@ -75,7 +76,7 @@ useEffect(()=>{
           }*/
     } catch (e) {
         setLoading(false);
-        console.log('hata var',e);
+        console.log('hata var',e.message);
         setError(e.message);
         }
           

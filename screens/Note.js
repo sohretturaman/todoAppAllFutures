@@ -90,7 +90,7 @@ const Note = ({navigation, ...props}) => {
     firebase.auth().onAuthStateChanged((userData)=>{
       setUser(userData?.displayName??'');
       if(!userData){
-        navigation.navigate('Auth',{screen:'Signup'})
+        navigation.navigate('Auth',{screen:'Login'})
         console.log('user is not exist',userData);
         
       }

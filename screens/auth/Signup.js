@@ -7,7 +7,7 @@ import {
   KeyboardAvoidingView,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import Input from '../../components/authComp/Input';
@@ -16,97 +16,104 @@ import Themes, {customDarkTheme} from '../../components/noteComp/Themes';
 //import {customDefaultTheme} from '../../components/Themes';
 import auth from '@react-native-firebase/auth';
 import {Formik} from 'formik';
-import { Subheading } from 'react-native-paper';
-import { firebase } from '@react-native-firebase/firestore';
+import {Subheading} from 'react-native-paper';
+import {firebase} from '@react-native-firebase/firestore';
 
 const Signup = () => {
   const navigation = useNavigation();
   const [logged, setLogged] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [error,setError] = useState('');
-  const[isLoding,setIsLoading]= useState(false); 
-  const [findedUser,setFindUser]=useState([]);
+  const [error, setError] = useState('');
+  const [isLoding, setIsLoading] = useState(false);
+  const [findedUser, setFindUser] = useState([]);
 
-
-
-  const handleSignup =async (values) => {
-    setIsLoading(true);
+  const handleSignup = async values => {
+    setError(''); 
+     setIsLoading(true);
+     findUser('');
+  
+     let  users = []; 
+     const  checkUsers =findUser(values.username);
+     users=(await checkUsers).map((x)=>x.name);
+     console.log('users value in hadle',users);
+     
+  
     try {
-     if(values.password !==values.rePassword){
-        console.log('passwords doesnt match');
-        setError('Password dont match'); 
-         }
-
-          const response = await auth().createUserWithEmailAndPassword(values.email,values.password);
-          await response.user.updateProfile({ displayName:values.username});
-   
-           console.log('User account created & signed in! response',response);
-   
-            await firebase.firestore().collection('allUsers').add({
-             name:values.username,
-             email:values.email
-           });
-           
-           setIsLoading(false); 
-           navigation.navigate('Login')
-
-         
  
+      if (!users.length==0){
+        setIsLoading(false); 
+           console.log('users  exist , users value',users)
+           setError('user name is already exist')
            
-} catch (error) {
-      setIsLoading(false); 
+      }else  {
+
+        const response = await auth().createUserWithEmailAndPassword(
+          values.email,
+          values.password,
+        );
+        await response.user.updateProfile({displayName: values.username});
+        console.log('User account created & signed in! response', response);
+
+        await firebase.firestore().collection('allUsers').add({
+          name: values.username,
+          email: values.email,
+        });
+        setIsLoading(false);
+        navigation.navigate('Login');
+      } 
+      
+     
+    
+       
+    } catch (error) {
+      setIsLoading(false);
       if (error.code === 'auth/email-already-in-use') {
         console.log('That email address is already in use!');
-         setError(error.message);
-
+        setError(error.message);
       }
 
       if (error.code === 'auth/invalid-email') {
         console.log('That email address is invalid!');
         setError(error.message);
       }
-      if(values.password !==values.rePassword){
-        console.log('password doest match',values.password,values.rePassword);
-        setError(error.message)   
-      }
 
       setError(error.message);
-      console.log('error exist',error.message);
-      
+      console.log('error exist', error.message);
     }
  
-
+  setIsLoading(false); 
   };
 
+  const findUser = async frgnName => {
+    setFindUser(''); 
+    const citiesRef = firebase.firestore().collection('allUsers');
+    const response = await citiesRef
+      .where('name', '==',frgnName)
+      .get()
+      .then(query => {
+        let data = query.docs.map(x => x.data());
+        return data; 
+        
+      });
 
-  {/**
-   const findUser =async (frgnMail)=>{
-  
-    const citiesRef =firebase.firestore().collection('allUsers')
-    const response = await citiesRef.where('email','==',frgnMail).get().then((query)=>{
-      let data =query.docs.map((x)=>x.data())
-      console.log('feedBack data',data); 
-      setFindUser(data)
-    })
- 
-  }
-   */
+   // console.log(' find use func response value', response);
+ return  response; 
+   
+  };
 
-  }
- 
 
   return (
     <KeyboardAvoidingView style={{height: '100%'}}>
       <SafeAreaView style={styles.container}>
-      <Subheading style={{color:'red'}}>{error}</Subheading>
-       
+        <Subheading style={{color: 'red'}}>{error}</Subheading>
+
         {/**header  wrapper */}
         <View style={styles.bodyWrapper}>
           <Image
             source={require('../../components/image/chat.png')}
             style={styles.image}
           />
-         {/**<Text style={styles.text}>Focused</Text> */} 
+          {/**<Text style={styles.text}>Focused</Text> */}
           <Text style={styles.disc}>
             save your notes in english by default, work with your team, call
             your team, share the screen and learn english at the same team.
@@ -114,21 +121,25 @@ const Signup = () => {
           <View>{/**configure with  formik !!! */}</View>
 
           <Formik
-            initialValues={{username:'',email: '', password: '',rePassword:''}}
-            onSubmit={handleSignup }>
+            initialValues={{
+              username: '',
+              email: '',
+              password: '',
+            }}
+            onSubmit={handleSignup}>
             {({handleChange, handleSubmit, values}) => (
               <View style={styles.bottomWrapper}>
-                 <Input
+                <Input
                   placeholder={'please write username'}
                   title={'User Name'}
                   onChangeText={handleChange('username')}
-                  value={ values.username}
+                  value={values.username}
                 />
                 <Input
                   placeholder={'please write email'}
                   title={'Email'}
                   onChangeText={handleChange('email')}
-                  value={ values.email}
+                  value={values.email}
                 />
                 <Input
                   placeholder={'please write password'}
@@ -137,20 +148,23 @@ const Signup = () => {
                   onChangeText={handleChange('password')}
                   value={values.password}
                 />
-                  <Input
-                  placeholder={'please write password agin'}
-                  title={'Password Again'}
-                  isSecure={true}
-                  onChangeText={handleChange('rePassword')}
-                  value={values.rePassword}
+             
+                <AuthButton
+                  title="Go Login"
+                  onPress={() => navigation.navigate('Login')}
+                  isLoading={isLoding}
                 />
-                <AuthButton  title='Go Login' onPress={()=>navigation.navigate('Login')} isLoading={isLoding} />
-                <AuthButton  title='Sign Up' onPress={handleSubmit} isLoading={isLoding} />
-
+                <AuthButton
+                  title="Sign Up"
+                  onPress={handleSubmit}
+                  isLoading={isLoding}
+                />
               </View>
             )}
           </Formik>
           {/**textinput and  button */}
+
+          <Button title="Find user " onPress={() => findUser('emma')} />
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>

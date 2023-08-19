@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import firebase from "@react-native-firebase/app";
 import { GiftedChat } from 'react-native-gifted-chat'
-import { Button } from "react-native-paper";
+import { Avatar, Button } from "react-native-paper";
 
 
 const Chat = () => {
@@ -12,15 +12,14 @@ const Chat = () => {
   const [userName,setUserName] =useState('');
   const [userId,setUserId]=useState(''); 
 
-console.log('data from chat list',route.params.chatId);
+
 
 
 useEffect(() => {
   firebase.auth().onAuthStateChanged(user => {
     setUserName(user?.displayName ?? '');
-    setUserId(user?.uid); 
-    
-    console.log('my user is here', user);
+    setUserId(user?.uid);  
+   // console.log('my user is here', user);
     
   });
 
@@ -30,7 +29,7 @@ useEffect(()=>{
   try {
     firebase.firestore().doc('chats/'+route.params.chatId)
     .onSnapshot((onSnapshot)=>{
-      console.log('chat data',onSnapshot.data());
+    //  console.log('chat data',onSnapshot.data());
        setMessages(onSnapshot.data()?.messages);
     })
   } catch (error) {
@@ -54,13 +53,13 @@ const onSend=(mes=[])=>{
 }
 
   return (
-    <View style={{flex:1,backgroundColor:'white'}}>
-      <Text>Chat</Text>
-      <Text style={{fontSize:60,color:'black'}}>heey </Text>
-   
-       <Button onPress={()=>{}}> get user to chat</Button>
+    <View style={{flex:1,backgroundColor:'white'}}>   
+      <View style={{position: 'absolute', top: 16, left: 16}}>
+        <Avatar.Icon size={24} icon="folder" />
+        </View>
+       
        <GiftedChat
-      messages={messages}
+      messages={messages.map((item)=>({...item,createdAt:item.createdAt?.toDate()}))}
       onSend={message => onSend(message)}
       user={{
         _id: userId,

@@ -173,6 +173,7 @@ const NavigationPage = () => {
               />
             ),
             header: () => <HeaderTask />,
+           
           }}
         />
         <TabStack.Screen
@@ -254,7 +255,7 @@ const NavigationPage = () => {
         <Stack.Screen name="EditNote" component={EditNoteComp} />
         <Stack.Screen name="Settings" component={SettingScreenComp} />
         <Stack.Screen name="AddTask" component={AddTask} />
-        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="Chat" component={Chat}     options={{headerShown: false}}/>
       </Stack.Navigator>
     );
   };

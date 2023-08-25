@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputWrapper: {
-    width: '90%',
+    width: '98%',
     marginBottom: -5,
     marginHorizontal: 5,
     borderRadius: 15,
@@ -64,6 +64,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     marginBottom: 10,
+    marginTop:5,
+    width:'98%'
+
   },
   noteContainer: {
     position: 'relative',

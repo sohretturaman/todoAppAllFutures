@@ -1,25 +1,49 @@
-
 import React from 'react';
 import {styles} from '../../screens/styles';
-import {StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView,  Dimensions,TextInput} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  Dimensions,
+  TextInput,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
-const SearchComp = ({searchNote,handleSearch}) => {
+//  <Icon name="note-search-outline" size={23} color={'#454545'} />
+const SearchComp = ({searchNote, handleSearch, text, iconName,onCancel}) => {
+  const navigation = useNavigation();
   return (
-    <View>
+    <View style={{alignSelf:'center'}}>
       <View style={styles.serachContainer}>
         <View style={styles.inputWrapper}>
-          <TouchableOpacity style={{paddingHorizontal: 5}} onPress={() => {}}>
-            <Icon name="note-search-outline" size={23} color={'#454545'} />
+          <TouchableOpacity
+            style={{paddingHorizontal: 5}}
+            onPress={() => {
+              navigation.navigate('ChatList');
+            }}>
+            <Icon name={iconName} size={23} color={'#454545'} />
           </TouchableOpacity>
-          <TextInput
-            style={styles.serachInput}
-            placeholder="search a note..."
-            placeholderTextColor={'#454545'}
-            value={searchNote}
-            onChangeText={handleSearch}
-          />
+          <View style={{width:'90%',flexDirection:'row',justifyContent:'space-between',alignContent:'center',alignItems:'center'}}>
+            <TextInput
+              style={styles.serachInput}
+              placeholder={text}
+              placeholderTextColor={'#454545'}
+              value={searchNote}
+              onChangeText={handleSearch}
+            />
+            <TouchableOpacity
+              style={{paddingHorizontal: 5, flexDirection:'row',alignSelf:'center'}}
+              onPress={() => {
+                navigation.navigate('ChatList');
+              }}>
+              <Icon name={'close'} size={23} color={'#454545'} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>

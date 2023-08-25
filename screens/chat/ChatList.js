@@ -28,7 +28,8 @@ function ChatList() {
 
   const [chatListData, setChatListData] = useState([]);
 
-  const HandleCreateChat = async () => {
+  {/** 
+   const HandleCreateChat = async () => {
     if (!myEmail || !frgnEmail) return;
 
     setIsLoading(true);
@@ -52,6 +53,8 @@ function ChatList() {
 
     console.log('after crating chat', createChat);
   };
+*/}
+  
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -103,7 +106,7 @@ function ChatList() {
           </React.Fragment>
         ))}
 
-        {/**chat list , dialog componnet react  native paper */}
+        {/**chat list , dialog componnet react  native paper 
         <Portal>
           <Dialog visible={visible} onDismiss={() => setVisible(false)}>
             <Dialog.Title>Text by Email</Dialog.Title>
@@ -123,13 +126,14 @@ function ChatList() {
             </Dialog.Actions>
           </Dialog>
         </Portal>
+        */}
       </View>
 
       {/**FAB button for  creating new dialog */}
       <FAB
         icon="plus"
         style={{position: 'absolute', bottom: 16, right: 16}}
-        onPress={() => setVisible(true)}
+        onPress={() => navigation.navigate('SearchUser')}
       />
     </SafeAreaView>
   );

@@ -11,6 +11,7 @@ import {
   useTheme,
   DarkTheme,
   DefaultTheme,
+
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Note from './Note';
@@ -41,11 +42,14 @@ import {firebase} from '@react-native-firebase/auth';
 import ChatList from './chat/ChatList';
 import Chat from './chat/Chat';
 import {PaperProvider} from 'react-native-paper';
+import SearchUser from './chat/SearchUser';
+import SearchComp from '../components/noteComp/SearchComp';
 
 const TabStack = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const NavigationPage = () => {
+
   const [authUser, setAuthUser] = useState('');
   const [user, setUser] = useState('');
   const [notes, setNotes] = useState([]);
@@ -255,7 +259,10 @@ const NavigationPage = () => {
         <Stack.Screen name="EditNote" component={EditNoteComp} />
         <Stack.Screen name="Settings" component={SettingScreenComp} />
         <Stack.Screen name="AddTask" component={AddTask} />
-        <Stack.Screen name="Chat" component={Chat}     options={{headerShown: false}}/>
+        <Stack.Screen name="Chat" component={Chat}   options={{headerShown: false}}/>
+        <Stack.Screen name='SearchUser' component={SearchUser}  options={{headerShown:false ,
+         
+        }}/>
       </Stack.Navigator>
     );
   };

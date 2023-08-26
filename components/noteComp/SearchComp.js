@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 
 //  <Icon name="note-search-outline" size={23} color={'#454545'} />
-const SearchComp = ({searchNote, handleSearch, text, iconName,onCancel}) => {
+const SearchComp = ({value, onChangeText, text, iconName,onCancel}) => {
   const navigation = useNavigation();
   return (
     <View style={{alignSelf:'center'}}>
@@ -33,14 +33,12 @@ const SearchComp = ({searchNote, handleSearch, text, iconName,onCancel}) => {
               style={styles.serachInput}
               placeholder={text}
               placeholderTextColor={'#454545'}
-              value={searchNote}
-              onChangeText={handleSearch}
+              value={value}
+              onChangeText={onChangeText}
             />
             <TouchableOpacity
               style={{paddingHorizontal: 5, flexDirection:'row',alignSelf:'center'}}
-              onPress={() => {
-                navigation.navigate('ChatList');
-              }}>
+              onPress={onCancel}>
               <Icon name={'close'} size={23} color={'#454545'} />
             </TouchableOpacity>
           </View>

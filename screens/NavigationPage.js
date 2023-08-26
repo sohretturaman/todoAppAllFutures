@@ -152,12 +152,12 @@ const NavigationPage = () => {
           }}
         />
         <TabStack.Screen
-          name="Calendar"
-          component={CalendarComp}
+          name="Search"
+          component={SearchUser}
           options={{
             tabBarIcon: ({focused}) => (
-              <Icon
-                name="calendar-month-outline"
+              <FontAwesome
+                name="search"
                 size={30}
                 color={focused ? '#7E0CF5' : '#454545'}
               />
@@ -187,7 +187,7 @@ const NavigationPage = () => {
             tabBarIcon: ({focused}) => (
               <FontAwesome
                 name="tasks"
-                size={30}
+                size={28}
                 color={focused ? '#7E0CF5' : '#454545'}
               />
             ),
@@ -260,9 +260,8 @@ const NavigationPage = () => {
         <Stack.Screen name="Settings" component={SettingScreenComp} />
         <Stack.Screen name="AddTask" component={AddTask} />
         <Stack.Screen name="Chat" component={Chat}   options={{headerShown: false}}/>
-        <Stack.Screen name='SearchUser' component={SearchUser}  options={{headerShown:false ,
-         
-        }}/>
+        <Stack.Screen name='Calendar' component={CalendarComp}
+         options={{header: () => <HeaderComp />}} />
       </Stack.Navigator>
     );
   };

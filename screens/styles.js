@@ -3,7 +3,8 @@ import {Dimensions, StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
    mainContainer:{
     backgroundColor: '#F6F5F5',
-    height:'100%'
+    height:'100%',
+    padding:2
    },
   bodyWrapper:{
     alignContent: 'center',
@@ -43,12 +44,11 @@ export const styles = StyleSheet.create({
     fontWeight: 500,
   },
   serachInput: {
-    fontSize: 16,
+    fontSize: 15,
   },
   inputWrapper: {
-    width: '98%',
-    marginBottom: -5,
-    marginHorizontal: 5,
+    width: '100%',
+    marginHorizontal:2,
     borderRadius: 15,
     borderColor: '#454545',
     borderBottomWidth: 2,
@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 10,
     marginTop:5,
-    width:'98%'
+  
 
   },
   noteContainer: {

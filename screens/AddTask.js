@@ -5,7 +5,6 @@ import { KeyboardAvoidingView, TextInput, Platform, ScrollView, StyleSheet, Touc
 import Moment from 'moment'
 
 
-//in this code block especially touchablewithoutfeedback is important for customer usage
 const AddTask = ({navigation, ...props }) => {
   
   const [task,setTask] =useState('');

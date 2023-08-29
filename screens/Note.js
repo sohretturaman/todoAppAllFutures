@@ -58,7 +58,7 @@ const Note = ({navigation, ...props}) => {
 
     for (let item of notes) {
       console.log('my item', item);
-
+       searchedArray=[];
       if (
         item.title.toLowerCase().includes(searchNote.toLowerCase()) ||
         item.disc.toLowerCase().includes(searchNote.toLowerCase())

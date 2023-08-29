@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 
 //  <Icon name="note-search-outline" size={23} color={'#454545'} />
-const SearchComp = ({value, onChangeText, text, iconName,onCancel}) => {
+const SearchComp = ({value, onChangeText, text, iconName,onCancel,onSubmitEditing}) => {
   const navigation = useNavigation();
   return (
     <View style={{alignSelf:'center'}}>
@@ -35,6 +35,8 @@ const SearchComp = ({value, onChangeText, text, iconName,onCancel}) => {
               placeholderTextColor={'#454545'}
               value={value}
               onChangeText={onChangeText}
+              onSubmitEditing={onSubmitEditing}
+              enablesReturnKeyAutomatically={true}
             />
             <TouchableOpacity
               style={{paddingHorizontal: 5, flexDirection:'row',alignSelf:'center'}}

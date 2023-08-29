@@ -211,7 +211,7 @@ const Tasks = () => {
                   autoFocus={true}
                   value={task}
                   onChangeText={(value)=>setTask(value)}
-                 // onSubmitEditing={() => setKeyboardVisible(false)}
+                  onSubmitEditing={() => setKeyboardVisible(false)}
                 />
               </View>
             </TouchableWithoutFeedback>

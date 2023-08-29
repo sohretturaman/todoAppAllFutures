@@ -15,7 +15,7 @@ const SearchUser = () => {
   const [savedSearches, setSavedSearches] = useState([]);
 
   useEffect(() => {
-    getHistory();
+    
     firebase
       .firestore()
       .collection('allUsers')
@@ -23,8 +23,11 @@ const SearchUser = () => {
         const data = snapshot.docs.map(x => x.data().name);
         setAllUsers(data);
       });
+    
+      getHistory(); 
+    
     // Stop listening for updates when no longer required if you are using  return()=>subscriber();
-  }, [savedSearches]);
+  }, [result]);
 
   // search user is done !!!!! :)
   const handleSearch = searchVal => {
@@ -51,21 +54,19 @@ const SearchUser = () => {
         });
     }
 
-    console.log('result is ', result);
+  
   };
 
   const onDeleteIcon = () => {
-    console.log('on delete icon worked');
     setSearch('');
     setResult([]);
   };
 
   const handleOnSubmit = async () => {
     setSearch('');
-    console.log('search value', search);
     if(search.length!==0){
       let newArray = [search, ...savedSearches];
-      console.log('saved serachs ', newArray);
+      //console.log('saved serachs ', newArray);
       await AsyncStorage.setItem('saveHistory', JSON.stringify(newArray))
         .then(() => setSavedSearches(newArray))
         .catch(err => console.log('an error accured', err));
@@ -75,14 +76,30 @@ const SearchUser = () => {
 
   const getHistory = async () => {
     try {
-      const Result = await AsyncStorage.getItem('saveHistory').then(() => {
-        setSavedSearches(JSON.parse(Result));
-        console.log('result from async storage', JSON.parse(Result));
-      });
+      const Result = await AsyncStorage.getItem('saveHistory');
+        if (result !==null){
+          setSavedSearches(JSON.parse(Result));
+          console.log('result while taking history from async storage', JSON.parse(Result));
+        }
     } catch (error) {
       console.log('error exist', error);
     }
   };
+
+
+  const onDeleteSearch = async(index)=>{
+     let newArray = [...savedSearches];
+     let deletedItem= newArray.splice(index,1);
+      console.log('deleted Item',deletedItem,'new array',newArray)
+         await AsyncStorage.setItem('saveHistory',JSON.stringify(newArray)).then(()=>{
+          setSavedSearches(newArray); 
+         }).catch((err)=>{
+          console.log(err);
+          
+         })
+  }
+
+
 
   return (
     <View style={{padding: 2, flex: 1}}>
@@ -97,7 +114,7 @@ const SearchUser = () => {
         onSubmitEditing={handleOnSubmit}
       />
 
-      {/** after submit on search component  */}
+      {/** history comp , if search is not exist show up   */}
 {!search&&(
        <View
        style={{
@@ -111,7 +128,7 @@ const SearchUser = () => {
            <React.Fragment key={index}>
              <List.Item
                title={item}
-               description={'new user'}
+               description={'searched'}
                onPress={() => {}}
                left={() => (
                  <Avatar.Text
@@ -122,7 +139,7 @@ const SearchUser = () => {
                      backgroundColor: 'black',
                      alignItems: 'center',
                    }}
-                   label={'Ş'}
+                   label={'H'}
                  />
                )}
                right={() => (
@@ -130,7 +147,7 @@ const SearchUser = () => {
                    icon="close"
                    color={'black'}
                    size={20}
-                   onPress={() => navigaiton.navigate('ChatList')}
+                   onPress={() => onDeleteSearch(index)}
                    style={{marginRight: -10}}
                  />
                )}
@@ -147,12 +164,12 @@ const SearchUser = () => {
 
       {search && (
         <ScrollView>
-          {/** after click on search component */}
+          {/** suggestion comp after click search comp  */}
           {result.map((item, index) => (
             <React.Fragment key={index}>
               <List.Item
                 title={item}
-                description={'new user'}
+                description={'suggestion'}
                 onPress={() => {}}
                 left={() => (
                   <Avatar.Text
@@ -163,18 +180,10 @@ const SearchUser = () => {
                       backgroundColor: 'black',
                       alignItems: 'center',
                     }}
-                    label={'Ş'}
+                    label={'T'}
                   />
                 )}
-                right={() => (
-                  <IconButton
-                    icon="close"
-                    color={'black'}
-                    size={20}
-                    onPress={() => navigaiton.navigate('ChatList')}
-                    style={{marginRight: -10}}
-                  />
-                )}
+            
                 style={{height: 60, justifyContent: 'center'}}
               />
               <Divider style={{backgroundColor: 'white', padding: 1}} />

@@ -46,6 +46,7 @@ const SearchUser = () => {
           for (let item in dataList) {
             let myUser = dataList[item].data().name.toLowerCase(); // seperated each item in data
             if (myUser.slice(0, query.length).indexOf(query) !== -1) {
+               //console.log('result data',dataList[item].data())
               setResult(prevVal => {
                 return [...prevVal, dataList[item].data().name];
               });
@@ -79,7 +80,7 @@ const SearchUser = () => {
       const Result = await AsyncStorage.getItem('saveHistory');
         if (result !==null){
           setSavedSearches(JSON.parse(Result));
-          console.log('result while taking history from async storage', JSON.parse(Result));
+          
         }
     } catch (error) {
       console.log('error exist', error);
@@ -170,7 +171,7 @@ const SearchUser = () => {
               <List.Item
                 title={item}
                 description={'suggestion'}
-                onPress={() => {}}
+                onPress={() => {navigaiton.navigate('Profile',{username:item})}}
                 left={() => (
                   <Avatar.Text
                     size={35}

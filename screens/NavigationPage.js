@@ -44,6 +44,7 @@ import Chat from './chat/Chat';
 import {PaperProvider} from 'react-native-paper';
 import SearchUser from './chat/SearchUser';
 import SearchComp from '../components/noteComp/SearchComp';
+import Profile from './user/Profile';
 
 const TabStack = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -260,6 +261,7 @@ const NavigationPage = () => {
         <Stack.Screen name="Settings" component={SettingScreenComp} />
         <Stack.Screen name="AddTask" component={AddTask} />
         <Stack.Screen name="Chat" component={Chat}   options={{headerShown: false}}/>
+        <Stack.Screen name='Profile' component={Profile} options={{headerShown:false}} />
         <Stack.Screen name='Calendar' component={CalendarComp}
          options={{header: () => <HeaderComp />}} />
       </Stack.Navigator>

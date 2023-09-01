@@ -74,7 +74,7 @@ function ChatList() {
           const data = onSnapShotData.docs;
           setChatListData(data);
           // console.log('data id',data.map((chat)=>chat.id));
-          console.log('data here for chatlistdata', data);
+          //console.log('data here for chatlistdata', data);
         });
     } catch (error) {
       console.log('error', error);

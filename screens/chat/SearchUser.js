@@ -125,7 +125,7 @@ const SearchUser = () => {
 
        <ScrollView>
         <Text style={{padding:5,color:'gray',textDecorationLine:'underline',fontWeight:'bold'}}>Recent Searches </Text>
-         {savedSearches.map((item, index) => (
+         {savedSearches?.map((item, index) => (
            <React.Fragment key={index}>
              <List.Item
                title={item}
@@ -171,7 +171,7 @@ const SearchUser = () => {
               <List.Item
                 title={item}
                 description={'suggestion'}
-                onPress={() => {navigaiton.navigate('Profile',{username:item})}}
+                onPress={() => {navigaiton.navigate('Profiles',{username:item})}}
                 left={() => (
                   <Avatar.Text
                     size={35}

@@ -45,6 +45,9 @@ import {PaperProvider} from 'react-native-paper';
 import SearchUser from './chat/SearchUser';
 import SearchComp from '../components/noteComp/SearchComp';
 import Profile from './user/Profile';
+import Profiles from './user/Profiles';
+import Account from './user/Account';
+import EditUser from './user/EditUser';
 
 const TabStack = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -262,8 +265,11 @@ const NavigationPage = () => {
         <Stack.Screen name="AddTask" component={AddTask} />
         <Stack.Screen name="Chat" component={Chat}   options={{headerShown: false}}/>
         <Stack.Screen name='Profile' component={Profile} options={{headerShown:false}} />
+        <Stack.Screen  name='Profiles' component={Profiles} options={{headerShown:false}}/>
+        <Stack.Screen name='Account'   component={Account} />
         <Stack.Screen name='Calendar' component={CalendarComp}
          options={{header: () => <HeaderComp />}} />
+         <Stack.Screen name='EditUserInfo' component={EditUser}/>
       </Stack.Navigator>
     );
   };

@@ -58,8 +58,10 @@ const NavigationPage = () => {
   const [user, setUser] = useState('');
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(false);
+
   //  const [moveToTrash, setMoveToTrash] = useState([]);
 
+ 
   useEffect(() => {
     getNotes();
     //getUserItem();
@@ -249,6 +251,9 @@ const NavigationPage = () => {
 
   let currentTheme = useSelector(selector => selector.changeTheme);
 
+  const ProfileScreenComp =()=>( 
+    <Profile />
+  )
   const MainStackComp = () => {
     return (
       <Stack.Navigator>
@@ -264,7 +269,7 @@ const NavigationPage = () => {
         <Stack.Screen name="Settings" component={SettingScreenComp} />
         <Stack.Screen name="AddTask" component={AddTask} />
         <Stack.Screen name="Chat" component={Chat}   options={{headerShown: false}}/>
-        <Stack.Screen name='Profile' component={Profile} options={{headerShown:false}} />
+        <Stack.Screen name='Profile' component={ProfileScreenComp} options={{headerShown:false}} />
         <Stack.Screen  name='Profiles' component={Profiles} options={{headerShown:false}}/>
         <Stack.Screen name='Account'   component={Account} />
         <Stack.Screen name='Calendar' component={CalendarComp}

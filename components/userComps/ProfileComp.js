@@ -14,7 +14,7 @@ import {Banner, Button} from 'react-native-paper';
 {
   /** image and user name , then bio , then edit button(edit profile on profile icon, edit bio) , and share button  */
 }
-const ProfileComp = ({user, ViewProfile, visible, setVisible,onEditButton}) => {
+const ProfileComp = ({user, ViewProfile, visible, setVisible,onEditButton,onShareClick}) => {
   return (
     <TouchableWithoutFeedback onPress={() => setVisible(false)}>
       <View style={{padding: 5, backgroundColor: 'white'}}>
@@ -51,35 +51,33 @@ const ProfileComp = ({user, ViewProfile, visible, setVisible,onEditButton}) => {
           />
 
           <View style={styles.userPerInfo}>
-            <Text style={styles.userName}>{user ? user : 'user Name'}</Text>
+            <Text style={styles.userName}>{user ? user.name : 'user Name'}</Text>
 
             <View style={styles.userBioWrapper}>
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
                 style={styles.userBio}>
-                ve inssani ayakta tutan da benlik zanni değil hiçlik bilincidir,
-                bir farki olmamali insanin comlekten
+                 {user?user.biography :''}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.profileButtonsWrapper}>
-          <TouchableOpacity
-            onPress={()=>{}}
-            style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View
+           
+            style={{flexDirection: 'row',alignItems: 'center'}}>
             <Button onPress={onEditButton}>Edit Profile</Button>
-            <Icon name="edit" size={20} />
-          </TouchableOpacity>
+            <Icon onPress={onEditButton} name="edit" size={20} />
+          </View>
 
-          <TouchableOpacity
-            onPress={()=>{}}
+          <View
             style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Button>Share Profile</Button>
+            <Button onPress={onShareClick}>Share Profile</Button>
 
-            <Icon name="share" size={20} />
-          </TouchableOpacity>
+            <Icon onPress={onShareClick} name="share" size={20} />
+          </View>
         </View>
 
         {/**Modal to chose  how to change prfile //!!close it when press on space and take primsission for camera */}

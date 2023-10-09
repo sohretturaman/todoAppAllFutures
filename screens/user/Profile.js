@@ -12,43 +12,61 @@ import React from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useEffect} from 'react';
 import {firebase} from '@react-native-firebase/auth';
-import firestore, {Filter} from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import {useState} from 'react';
-import {
-  Drawer,
-  IconButton,
-  Menu,
-  SegmentedButtons,
-  TextInput,
-  Tooltip,
-} from 'react-native-paper';
 import ProfileComp from '../../components/userComps/ProfileComp';
 
-const Profile = (...props) => {
+
+
+const Profile = () => {
   const navigation = useNavigation(); 
-  const [user, setUser] = useState([]);
+
+  const [user,setUser]=useState([]);
   const [visible, setVisible] = useState(false);
   const [pressed, setPressed] = useState(false);
-  const [pressed2, setPressed2] = useState(false);
-  useEffect(() => {
-    //needed datas :profile url , gmail , display name , bio
-    firebase.auth().onAuthStateChanged(user => {
-      console.log('user in profile', user);
-      setUser(user);
-    });
+  const [pressed2, setPressed2] = useState(false); 
+  const [data,setData]=useState(null);
+const [loading,setLoading] =useState(false); 
+const Id =''; 
 
-    const snapshot = firestore()
-      .collection('allUsers')
-      .where('name', '==', 'sohret ')
-      .get()
-      .then(x => {
-        console.log(
-         'snopshot',
-          x?.docs.map(x => x?.data()),
-        );
-      })
-      .catch(err => console.log('error on profile screen', err));
-  }, []);
+//const id = data.map((x)=>x.id);
+
+useEffect(()=>{
+  firebase.auth().onAuthStateChanged(async (user)=>{
+    console.log('current user',user);
+  
+    setUser(user);
+    setLoading(true); 
+  })
+  setLoading(false); 
+   // user.updateProfile({displayName:newValue}) to update value
+      
+},[user])
+
+
+
+useEffect(() => {
+  console.log('username',user.displayName);
+  if(loading){
+    firestore()
+    .collection('allUsers').where('name','==',user.displayName)
+    .get()
+    .then(querySnapshot => {
+      let newData=[]; 
+     
+   
+    querySnapshot.forEach(documentSnapshot => {
+      newData.push(documentSnapshot);   
+      Id=documentSnapshot.id;
+      
+     });
+    
+     
+      
+    });
+  }
+
+}, []);
 
   const handlePress = () => {
     setPressed(!pressed);
@@ -58,10 +76,17 @@ const Profile = (...props) => {
     setPressed2(!pressed2);
   };
 
-const  handleOnEditButton=()=>{
-
-navigation.navigate('EditUserInfo');
+const  handleOnEditButton=(item)=>{
+//console.log('item values in edit',item.id ,'**',item.data());
+navigation.navigate('EditUserInfo',
+{userId:item,
+  data:item
+})
 }
+
+
+
+
 
   // note handle set Error on login and signup screen and handle spaces while give username
   return (
@@ -69,13 +94,22 @@ navigation.navigate('EditUserInfo');
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <View>
           {/** image and user name , then bio , then edit button(edit profile on profile icon, edit bio) , and share button  */}
-
-          <ProfileComp
+        
+  
+    <View> 
+        <ProfileComp
             visible={visible}
             setVisible={setVisible}
-            user={user.displayName}
-            onEditButton={handleOnEditButton}
+            user={data}
+            onEditButton={handleOnEditButton(data)}
           />
+       
+    
+</View>
+
+           
+
+          
           {/**your  own feed and posts and and saved  posts at the same page  */}
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
@@ -109,6 +143,7 @@ navigation.navigate('EditUserInfo');
           </Pressable>
         </View>
       </View>
+
     </TouchableWithoutFeedback>
   );
 };
